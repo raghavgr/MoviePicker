@@ -104,7 +104,7 @@ class ClarifaiClient {
             if error != nil {
                 return completionHandlerForRecognizeImage(recognizeResponse: nil, ErrorType: error)
             }
-            let endpointForTag = "tag"
+            let endpointForTag = "/tag"
             Alamofire.upload(.POST, Config.APIBaseURL.stringByAppendingString(endpointForTag),
                 headers: ["Authorization": "Bearer \(self.accessToken!)"],
                 multipartFormData: {
@@ -165,6 +165,7 @@ class ClarifaiClient {
             let allResults = dict["results"].arrayValue
             allTags = []
             for aResult in allResults {
+                // tested all of this in playground
                 let classes = aResult["result"]["tag"]["classes"].arrayObject
                 let probabilities = aResult["result"]["tag"]["probs"].arrayObject
                 let concepts = aResult["result"]["tag"]["concept_ids"].arrayObject

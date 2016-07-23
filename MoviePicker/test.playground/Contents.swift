@@ -45,3 +45,40 @@ let task = session.dataTaskWithRequest(request) { data, response, error in
 }
 
 task.resume()
+
+//Alamofire call to fetch location data
+
+Alamofire.request(.GET, url!).responseJSON { response in
+    
+    switch response.result {
+        
+    case .Success(let data):
+        dispatch_async(dispatch_get_main_queue(), {
+            
+            if let locationName:String = data["name"] as? String{
+                annotation.title = locationName
+            }
+            if let main:[NSObject:AnyObject] = data["main"] as? [NSObject:AnyObject]{,
+                if let temperature = main["temp"]{
+                    
+                    annotation.subtitle = " \(temperature) ℃"
+                    
+                    self.IBmapView.selectAnnotation(annotation, animated: true)
+                    
+                }
+                
+            }
+            
+        })
+        
+        
+        
+    case .Failure(let error):
+        
+        print(error)
+        
+    }
+    
+}
+
+

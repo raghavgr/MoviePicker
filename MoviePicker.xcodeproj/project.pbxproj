@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0E38B14D1D37A05B0005B332 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E38B14C1D37A05B0005B332 /* AppDelegate.swift */; };
-		0E38B14F1D37A05B0005B332 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E38B14E1D37A05B0005B332 /* ViewController.swift */; };
 		0E38B1521D37A05B0005B332 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E38B1501D37A05B0005B332 /* Main.storyboard */; };
 		0E38B1541D37A05B0005B332 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E38B1531D37A05B0005B332 /* Assets.xcassets */; };
 		0E38B1571D37A05B0005B332 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E38B1551D37A05B0005B332 /* LaunchScreen.storyboard */; };
@@ -16,6 +15,7 @@
 		0E38B16D1D37A05C0005B332 /* MoviePickerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E38B16C1D37A05C0005B332 /* MoviePickerUITests.swift */; };
 		0E4F6EDA1D38BC6300515DAD /* ClarifaiConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F6ED91D38BC6300515DAD /* ClarifaiConstants.swift */; };
 		0E4F6EDC1D38BC7500515DAD /* ClarifaiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F6EDB1D38BC7500515DAD /* ClarifaiClient.swift */; };
+		0E8C23F81D4279FD00D44CDA /* ShowImageAndTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8C23F71D4279FD00D44CDA /* ShowImageAndTags.swift */; };
 		0E9777F21D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E9777F11D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m */; };
 		0E9777F51D3BF409000FF138 /* TMDBConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9777F41D3BF409000FF138 /* TMDBConstants.swift */; };
 		0E9777F71D3BF4BC000FF138 /* TMDBClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9777F61D3BF4BC000FF138 /* TMDBClient.swift */; };
@@ -46,7 +46,6 @@
 /* Begin PBXFileReference section */
 		0E38B1491D37A05B0005B332 /* MoviePicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoviePicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E38B14C1D37A05B0005B332 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0E38B14E1D37A05B0005B332 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0E38B1511D37A05B0005B332 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0E38B1531D37A05B0005B332 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0E38B1561D37A05B0005B332 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -59,6 +58,7 @@
 		0E38B16E1D37A05C0005B332 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E4F6ED91D38BC6300515DAD /* ClarifaiConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClarifaiConstants.swift; sourceTree = "<group>"; };
 		0E4F6EDB1D38BC7500515DAD /* ClarifaiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClarifaiClient.swift; sourceTree = "<group>"; };
+		0E8C23F71D4279FD00D44CDA /* ShowImageAndTags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowImageAndTags.swift; sourceTree = "<group>"; };
 		0E9777EE1D3BC7E8000FF138 /* test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = test.playground; sourceTree = "<group>"; };
 		0E9777EF1D3BEA8D000FF138 /* MoviePicker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MoviePicker-Bridging-Header.h"; sourceTree = "<group>"; };
 		0E9777F01D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
@@ -125,13 +125,12 @@
 		0E38B14B1D37A05B0005B332 /* MoviePicker */ = {
 			isa = PBXGroup;
 			children = (
-				0E9777F31D3BF3FA000FF138 /* TMDBClient */,
-				0E9777F01D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.h */,
-				0E9777F11D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m */,
-				0E4F6ED81D38BC4E00515DAD /* ClarifaiClient */,
 				0E38B14C1D37A05B0005B332 /* AppDelegate.swift */,
 				0E9777FA1D3BFBB5000FF138 /* GCDBlackBox.swift */,
-				0E38B14E1D37A05B0005B332 /* ViewController.swift */,
+				0E8C23F51D42794C00D44CDA /* Model */,
+				0E8C23F61D42796100D44CDA /* Controller */,
+				0E9777F01D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.h */,
+				0E9777F11D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m */,
 				0E38B1501D37A05B0005B332 /* Main.storyboard */,
 				0E38B1531D37A05B0005B332 /* Assets.xcassets */,
 				0E38B1551D37A05B0005B332 /* LaunchScreen.storyboard */,
@@ -167,6 +166,23 @@
 				0E4F6ED91D38BC6300515DAD /* ClarifaiConstants.swift */,
 			);
 			name = ClarifaiClient;
+			sourceTree = "<group>";
+		};
+		0E8C23F51D42794C00D44CDA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0E9777F31D3BF3FA000FF138 /* TMDBClient */,
+				0E4F6ED81D38BC4E00515DAD /* ClarifaiClient */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		0E8C23F61D42796100D44CDA /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				0E8C23F71D4279FD00D44CDA /* ShowImageAndTags.swift */,
+			);
+			name = Controller;
 			sourceTree = "<group>";
 		};
 		0E9777F31D3BF3FA000FF138 /* TMDBClient */ = {
@@ -387,9 +403,9 @@
 				0E9777F91D3BF84D000FF138 /* TMDBMovie.swift in Sources */,
 				0E9777FF1D3BFEF8000FF138 /* TMDBConfig.swift in Sources */,
 				0E9777F71D3BF4BC000FF138 /* TMDBClient.swift in Sources */,
-				0E38B14F1D37A05B0005B332 /* ViewController.swift in Sources */,
 				0E4F6EDC1D38BC7500515DAD /* ClarifaiClient.swift in Sources */,
 				0E4F6EDA1D38BC6300515DAD /* ClarifaiConstants.swift in Sources */,
+				0E8C23F81D4279FD00D44CDA /* ShowImageAndTags.swift in Sources */,
 				0E38B14D1D37A05B0005B332 /* AppDelegate.swift in Sources */,
 				0E9777FB1D3BFBB5000FF138 /* GCDBlackBox.swift in Sources */,
 				0E9778011D3BFF52000FF138 /* TMDBConvenience.swift in Sources */,

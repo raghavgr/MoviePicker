@@ -30,7 +30,7 @@ extension TMDBClient {
         static let SearchKeyword = "/search/keyword"
         
         // MARK: Use keyword ID for movie list
-        static let KeywordID = "/keyword/id/movies"
+        //static let KeywordID = "/keyword/id/movies"
         
         // MARK: Config
         static let Config = "/configuration"
@@ -60,12 +60,7 @@ extension TMDBClient {
         static let StatusMessage = "status_message"
         static let StatusCode = "status_code"
         
-        // MARK: Authorization
-        static let RequestToken = "request_token"
-        static let SessionID = "session_id"
         
-        // MARK: Account
-        static let UserID = "id"
         
         // MARK: Config
         static let ConfigBaseImageURL = "base_url"
@@ -82,6 +77,10 @@ extension TMDBClient {
         static let MovieReleaseYear = "release_year"
         static let MovieResults = "results"
         
+        // MARK: Keyword
+        static let keywordResults = "results"
+        static let keywordID = "id"
+        static let keywordName = "name"
     }
     
     // MARK: Poster Sizes

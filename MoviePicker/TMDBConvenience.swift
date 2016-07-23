@@ -9,6 +9,8 @@
 import Foundation
 
 extension TMDBClient {
+    
+    // MARK: Method used for movie posters
     func getConfig(completionHandlerForConfig: (didSucceed: Bool, error: NSError?) -> Void) {
         
         /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
@@ -29,7 +31,19 @@ extension TMDBClient {
         }
     }
     
-    func getMoviesForKeyworfString(searchString: String, completionHandlerForMovies: (result: [TMDBMovie]?, error: NSError?) -> Void) -> NSURLSessionDataTask? {
+    // A struct for keyword response
+    struct searchKeywordResponse {
+        let keywordID: Int
+        let queryName: String
+        
+        init(dictionary: [String:AnyObject]) {
+            keywordID = dictionary[TMDBClient.JSONResponseKeys.keywordID] as! Int
+            queryName = dictionary[TMDBClient.JSONResponseKeys.keywordName] as! String
+        }
+    }
+    
+    // MARK: Keyword search methods
+    func getMoviesForKeyworfString(searchString: String, completionHandlerForMovies: (result: [searchKeywordResponse]?, error: NSError?) -> Void) -> NSURLSessionDataTask? {
         
         /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
         let parameters = [TMDBClient.ParameterKeys.Query: searchString]
@@ -42,14 +56,46 @@ extension TMDBClient {
                 completionHandlerForMovies(result: nil, error: error)
             } else {
                 
+                if let results = results[TMDBClient.JSONResponseKeys.keywordResults] as? [[String:AnyObject]] {
+                    var eachKeyword = [searchKeywordResponse]()
+                    
+                    // iterate through array of dictionaries, each Movie is a dictionary
+                    for result in results {
+                        eachKeyword.append(searchKeywordResponse(dictionary: result))
+                    }
+                    
+                    completionHandlerForMovies(result: eachKeyword, error: nil)
+                } else {
+                    completionHandlerForMovies(result: nil, error: NSError(domain: "getMoviesForKeyworfString parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse getMoviesForKeyworfString"]))
+                }
+            }
+        }
+        
+        return task
+    }
+    
+    // MARK: get list of movies using the keyword id
+    func getListKeywordID(id: Int, completionHandlerForKeywordID: (result: [TMDBMovie]?, error: NSError?) -> ()) -> NSURLSessionDataTask? {
+        
+        /* 1. Specify parameters, method (if has {key}), and HTTP body (if POST) */
+        let parameters = [String:AnyObject]()
+        let method = "/keyword/\(id)/movies"
+        
+        let task = taskForGETMethod(method, parameters: parameters) {
+            (results, error) in
+            
+            if let error = error {
+                completionHandlerForKeywordID(result: nil, error: error)
+            } else {
                 if let results = results[TMDBClient.JSONResponseKeys.MovieResults] as? [[String:AnyObject]] {
                     
                     let movies = TMDBMovie.moviesFromResults(results)
-                    completionHandlerForMovies(result: movies, error: nil)
+                    completionHandlerForKeywordID(result: movies, error: nil)
                 } else {
-                    completionHandlerForMovies(result: nil, error: NSError(domain: "getMoviesForSearchString parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse getMoviesForSearchString"]))
+                    completionHandlerForKeywordID(result: nil, error:  NSError(domain: "getListKeywordID parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse getListKeywordID"]))
                 }
             }
+            
         }
         
         return task
