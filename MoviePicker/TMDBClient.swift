@@ -169,4 +169,28 @@ class TMDBClient: NSObject {
         }
         return Singleton.sharedInstance
     }
+    
+    // MARK: - Shared Date Formatter
+    
+    class var sharedDateFormatter: NSDateFormatter  {
+        
+        struct Singleton {
+            static let dateFormatter = Singleton.generateDateFormatter()
+            
+            static func generateDateFormatter() -> NSDateFormatter {
+                let formatter = NSDateFormatter()
+                formatter.dateFormat = "yyyy-mm-dd"
+                
+                return formatter
+            }
+        }
+        
+        return Singleton.dateFormatter
+    }
+    
+    // MARK: - Shared Image Cache
+    
+    struct Caches {
+        static let imageCache = ImageCache()
+    }
 }

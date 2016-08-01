@@ -16,7 +16,7 @@ struct TMDBMovie {
     let id: Int
     let posterPath: String?
     let releaseYear: String?
-    
+    let vote_avg: Double
     // MARK: Initializers
     
     // construct a TMDBMovie from a dictionary
@@ -24,7 +24,7 @@ struct TMDBMovie {
         title = dictionary[TMDBClient.JSONResponseKeys.MovieTitle] as! String
         id = dictionary[TMDBClient.JSONResponseKeys.MovieID] as! Int
         posterPath = dictionary[TMDBClient.JSONResponseKeys.MoviePosterPath] as? String
-        
+        vote_avg = dictionary[TMDBClient.JSONResponseKeys.MovieVoteAverage] as! Double
         if let releaseDateString = dictionary[TMDBClient.JSONResponseKeys.MovieReleaseDate] as? String where releaseDateString.isEmpty == false {
             releaseYear = releaseDateString.substringToIndex(releaseDateString.startIndex.advancedBy(4))
         } else {

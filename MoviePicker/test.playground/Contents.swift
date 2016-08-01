@@ -7,6 +7,8 @@ import Alamofire
  import XCPlayground
 XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 var str = "Hello, playground"
+//print("alvin".self.dynamicType)
+
 let url = NSBundle.mainBundle().URLForResource("data", withExtension: "json")
 let data = NSData(contentsOfURL: url!)
 
@@ -17,6 +19,59 @@ do {
     // Handle Error
 }
 
+class tagResponse: NSObject {
+    var classLabel: String
+    var probability: Float
+    var conceptId: String
+    
+    init(label: String, prob: Float, conId: String) {
+        classLabel = label
+        probability = prob
+        conceptId = conId
+    }
+}
+
+class clarifaiResponse {
+    var statusCode: String
+    var statusMsg: String
+    //var results: [apiResult] = [apiResult]()
+    var allTags: Array<tagResponse>?
+    init(dict: JSON) {
+        self.statusCode = dict["status_code"].stringValue
+        self.statusMsg = dict["status_msg"].stringValue
+        let allResults = dict["results"].arrayValue
+        allTags = []
+        for aResult in allResults {
+            // tested all of this in playground
+            let classes = aResult["result"]["tag"]["classes"].arrayObject
+            let probabilities = aResult["result"]["tag"]["probs"].arrayObject
+            let concepts = aResult["result"]["tag"]["concept_ids"].arrayObject
+            
+            for (i, classLabel) in classes!.enumerate() {
+                let probability = probabilities![i] as! Float
+                let concept = concepts![i]
+                
+                let newTag = tagResponse(label: classLabel as! String, prob: probability, conId: concept as! String)
+                allTags?.append(newTag)
+            }
+        }
+    }
+}
+let aResponse = JSON(data: data!)
+let testClarifai = clarifaiResponse(dict: aResponse)
+var tagsSet = Set<String>()
+
+print(testClarifai.allTags![19].classLabel)
+for tag in testClarifai.allTags! {
+    print(tag.classLabel)
+    tagsSet.insert(tag.classLabel)
+}
+tagsSet.count
+/**
+let timestamp: Float = 1469263452058
+let tim: Double = Double(timestamp)/1000
+let timeWithNSDate = NSDate.init(timeIntervalSince1970: tim)
+*/
 let response = JSON(data: data!)
 
 let stat = response["status_code"].rawString()
@@ -45,40 +100,34 @@ let task = session.dataTaskWithRequest(request) { data, response, error in
 }
 
 task.resume()
+/**
+var normalText = "Hi am normal"
 
-//Alamofire call to fetch location data
+var boldText  = "And I am BOLD!"
 
-Alamofire.request(.GET, url!).responseJSON { response in
-    
-    switch response.result {
-        
-    case .Success(let data):
-        dispatch_async(dispatch_get_main_queue(), {
-            
-            if let locationName:String = data["name"] as? String{
-                annotation.title = locationName
-            }
-            if let main:[NSObject:AnyObject] = data["main"] as? [NSObject:AnyObject]{,
-                if let temperature = main["temp"]{
-                    
-                    annotation.subtitle = " \(temperature) ℃"
-                    
-                    self.IBmapView.selectAnnotation(annotation, animated: true)
-                    
-                }
-                
-            }
-            
-        })
-        
-        
-        
-    case .Failure(let error):
-        
-        print(error)
-        
+var attributedString = NSMutableAttributedString(string:normalText)
+
+var attrs = [NSFontAttributeName : UIFont.boldSystemFontOfSize(15)]
+var boldString = NSMutableAttributedString(string:boldText, attributes:attrs)
+
+attributedString.appendAttributedString(boldString)
+
+print(attributedString)
+
+extension NSMutableAttributedString {
+    func bold(text:String) -> NSMutableAttributedString {
+        let attrs:[String:AnyObject] = [NSFontAttributeName : UIFont(name: "AvenirNext-Medium", size: 12)!]
+        let boldString = NSMutableAttributedString(string:"\(text)", attributes:attrs)
+        self.appendAttributedString(boldString)
+        return self
     }
     
+    func normal(text:String)->NSMutableAttributedString {
+        let normal =  NSAttributedString(string: text)
+        self.appendAttributedString(normal)
+        return self
+    }
 }
-
-
+let formattedString = NSMutableAttributedString()
+formattedString.bold("Bold Text").normal(" Normal Text ").bold("Bold Text")
+*/

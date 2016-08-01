@@ -23,7 +23,7 @@ class ClarifaiClient {
         self.getAccessToken()
     }
     
-    private func checkAccessToken(completionHandlerForAccessToken: (errorString: NSError?) -> ()) {
+    func checkAccessToken(completionHandlerForAccessToken: (errorString: NSError?) -> ()) {
         if self.accessToken != nil && self.accessTokenExpiration != nil && self.accessTokenExpiration?.timeIntervalSinceNow > Config.MinimumTokenTime {
             completionHandlerForAccessToken(errorString: nil)
         } else {
@@ -49,7 +49,7 @@ class ClarifaiClient {
         }
     }
     
-    private func saveCurrentToken(result: responseForToken) {
+    func saveCurrentToken(result: responseForToken) {
         if let token = result.token, expiryTime = result.lastingTime {
             let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
             let expiration: NSDate = NSDate(timeIntervalSinceNow: expiryTime)
@@ -64,7 +64,7 @@ class ClarifaiClient {
         }
     }
     
-    private func cancelAccessToken() {
+    func cancelAccessToken() {
         let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
         defaults.removeObjectForKey(Config.clientID)
         defaults.removeObjectForKey(Config.AccessToken)
@@ -75,7 +75,7 @@ class ClarifaiClient {
         self.accessTokenExpiration = nil
     }
     
-    private func getAccessToken() {
+    func getAccessToken() {
         let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
         
         if self.appID != defaults.stringForKey(Config.clientID){
@@ -85,7 +85,7 @@ class ClarifaiClient {
             self.accessTokenExpiration = defaults.objectForKey(Config.AccessTokenExpiryTime)! as? NSDate
         }
     }
-    private class responseForToken: NSObject {
+    class responseForToken: NSObject {
         var token: String?
         var lastingTime: NSTimeInterval?
         
@@ -97,13 +97,28 @@ class ClarifaiClient {
     
     // MARK : Processing Image
     
-    private func recognizeImage(data: UIImage, completionHandlerForRecognizeImage: (recognizeResponse: clarifaiResponse?, ErrorType: NSError?) -> ()) {
+    /// This method uploads the image for recognition
+    /// Here are the steps you should follow to use this method
+    ///
+    /// 1. Prepare image to be sent
+    ///
+    /// 2. Call this method.
+    ///
+    /// Here are some bullet points to remember
+    /// * Use Jpeg
+    ///
+    /// - parameters:
+    ///   - int: An image `UIImage` parameter.
+    /// - throws: throws an NSError
+    /// - returns: a Clarifai Response.
+    func recognizeImage(data: UIImage, completionHandlerForRecognizeImage: (recognizeResponse: clarifaiResponse?, ErrorType: NSError?) -> ()) {
         self.checkAccessToken() {
             (error) in
             // check if token is valid
             if error != nil {
                 return completionHandlerForRecognizeImage(recognizeResponse: nil, ErrorType: error)
             }
+            print("in recognizeImage")
             let endpointForTag = "/tag"
             Alamofire.upload(.POST, Config.APIBaseURL.stringByAppendingString(endpointForTag),
                 headers: ["Authorization": "Bearer \(self.accessToken!)"],
@@ -116,7 +131,7 @@ class ClarifaiClient {
                     UIGraphicsEndImageContext()
                     
                     multiPartFormData.appendBodyPart(data: UIImageJPEGRepresentation(resizedImage, 0.9)!, name: "encoded_image", fileName: "image.jpg", mimeType: "image/jpeg")
-
+                    print("in alamofire upload")
                 },
                 encodingCompletion: {
                     encodingResult in
@@ -169,7 +184,7 @@ class ClarifaiClient {
                 let classes = aResult["result"]["tag"]["classes"].arrayObject
                 let probabilities = aResult["result"]["tag"]["probs"].arrayObject
                 let concepts = aResult["result"]["tag"]["concept_ids"].arrayObject
-                
+                print("in clarifaiResponse loop")
                 for (i, classLabel) in classes!.enumerate() {
                     let probability = probabilities![i] as! Float
                     let concept = concepts![i]
@@ -178,9 +193,7 @@ class ClarifaiClient {
                     allTags?.append(newTag)
                 }
             }
-        }
-        
-        
+        }    
     }
  /**
     // MARK: Helper functions

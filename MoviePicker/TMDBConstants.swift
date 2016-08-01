@@ -75,6 +75,7 @@ extension TMDBClient {
         static let MoviePosterPath = "poster_path"
         static let MovieReleaseDate = "release_date"
         static let MovieReleaseYear = "release_year"
+        static let MovieVoteAverage = "vote_average"
         static let MovieResults = "results"
         
         // MARK: Keyword

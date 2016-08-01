@@ -31,16 +31,7 @@ extension TMDBClient {
         }
     }
     
-    // A struct for keyword response
-    struct searchKeywordResponse {
-        let keywordID: Int
-        let queryName: String
-        
-        init(dictionary: [String:AnyObject]) {
-            keywordID = dictionary[TMDBClient.JSONResponseKeys.keywordID] as! Int
-            queryName = dictionary[TMDBClient.JSONResponseKeys.keywordName] as! String
-        }
-    }
+
     
     // MARK: Keyword search methods
     func getMoviesForKeyworfString(searchString: String, completionHandlerForMovies: (result: [searchKeywordResponse]?, error: NSError?) -> Void) -> NSURLSessionDataTask? {
