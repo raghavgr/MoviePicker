@@ -385,6 +385,7 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="8UY-Ez-9hP">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="oi8-jA-Uyh">
                                     <size key="itemSize" width="120" height="120"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -392,7 +393,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageSaved" id="E5F-h6-scu">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageCollectionCell" id="E5F-h6-scu" customClass="ImageCollectionCell" customModule="MoviePicker" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -434,15 +435,22 @@
                                                 <include reference="zI6-Ub-SLJ"/>
                                             </mask>
                                         </variation>
+                                        <connections>
+                                            <outlet property="imageView" destination="cBT-NL-h0b" id="6BR-YK-Bkd"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="8UY-Ez-9hP" firstAttribute="top" secondItem="vrb-Te-imN" secondAttribute="bottom" id="Lva-YS-RDx"/>
+                            <constraint firstItem="8UY-Ez-9hP" firstAttribute="top" secondItem="vrb-Te-imN" secondAttribute="bottom" id="Lva-YS-RDx">
+                                <variation key="widthClass=compact" constant="53"/>
+                            </constraint>
                             <constraint firstAttribute="trailing" secondItem="8UY-Ez-9hP" secondAttribute="trailing" id="VPc-qe-zJC"/>
-                            <constraint firstItem="8UY-Ez-9hP" firstAttribute="leading" secondItem="WUF-e2-v3P" secondAttribute="leading" id="e0B-14-tRn"/>
+                            <constraint firstItem="8UY-Ez-9hP" firstAttribute="leading" secondItem="WUF-e2-v3P" secondAttribute="leading" id="e0B-14-tRn">
+                                <variation key="widthClass=compact" constant="69"/>
+                            </constraint>
                             <constraint firstItem="8UY-Ez-9hP" firstAttribute="bottom" secondItem="CKK-Rp-Ver" secondAttribute="top" id="eJv-Pg-51g"/>
                         </constraints>
                         <variation key="default">

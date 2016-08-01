@@ -8,7 +8,9 @@
 
 import UIKit
 import CoreData
-class SavedMoviesCollection: CoreCollectionViewController, UICollectionViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+private let reuseIdentifier = "imageCollectionCell"
+
+class SavedMoviesCollection: CoreCollectionViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var photosCollection: UICollectionView!
     
@@ -19,6 +21,7 @@ class SavedMoviesCollection: CoreCollectionViewController, UICollectionViewDeleg
         super.viewDidLoad()
         
         photosCollection.delegate = self
+        photosCollection.dataSource = self
        // self.photosCollection.emptyDataSetSource = self
        // photosCollection.emptyDataSetDelegate = self
         
@@ -52,8 +55,19 @@ class SavedMoviesCollection: CoreCollectionViewController, UICollectionViewDeleg
             return [Photo]()
         }
     }
+    
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+       // let pic = allPhotos[indexPath.row]
+        //let image = UIImage(data: pic.image!)
+        print("inside cellforeItem collection")
+        let collectionCellImage = UIImage(named: "Camera")
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! ImageCollectionCell
+        cell.imageView.image = collectionCellImage
+        return cell
+    }
 }
 
-extension SavedMoviesCollection {
-
-}
