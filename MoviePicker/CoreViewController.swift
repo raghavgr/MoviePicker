@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class CoreCollectionViewController: UIViewController, NSFetchedResultsControllerDelegate {
+class CoreViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
     var fetchedResultsController : NSFetchedResultsController?{
         didSet{
@@ -31,7 +31,7 @@ class CoreCollectionViewController: UIViewController, NSFetchedResultsController
 }
 
 // MARK:  - Fetches
-extension CoreCollectionViewController{
+extension CoreViewController{
     
     func executeSearch(){
         if let fc = fetchedResultsController{

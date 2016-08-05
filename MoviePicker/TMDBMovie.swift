@@ -15,7 +15,7 @@ struct TMDBMovie {
     let title: String
     let id: Int
     let posterPath: String?
-    let releaseYear: String?
+    let releaseYear: NSDate?
     let vote_avg: Double
     // MARK: Initializers
     
@@ -25,11 +25,9 @@ struct TMDBMovie {
         id = dictionary[TMDBClient.JSONResponseKeys.MovieID] as! Int
         posterPath = dictionary[TMDBClient.JSONResponseKeys.MoviePosterPath] as? String
         vote_avg = dictionary[TMDBClient.JSONResponseKeys.MovieVoteAverage] as! Double
-        if let releaseDateString = dictionary[TMDBClient.JSONResponseKeys.MovieReleaseDate] as? String where releaseDateString.isEmpty == false {
-            releaseYear = releaseDateString.substringToIndex(releaseDateString.startIndex.advancedBy(4))
-        } else {
-            releaseYear = ""
-        }
+        let releaseDateString = dictionary[TMDBClient.JSONResponseKeys.MovieReleaseDate] as? String
+        let date = TMDBClient.sharedDateFormatter.dateFromString(releaseDateString!)
+        releaseYear = date
     }
     
     static func moviesFromResults(results: [[String:AnyObject]]) -> [TMDBMovie] {

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 private let reuseIdentifier = "imageCollectionCell"
 
-class SavedMoviesCollection: CoreCollectionViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     @IBOutlet weak var photosCollection: UICollectionView!
     

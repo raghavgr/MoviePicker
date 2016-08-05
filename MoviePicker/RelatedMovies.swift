@@ -7,8 +7,8 @@
 //
 
 import UIKit
-
-class RelatedMovies: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+import CoreData
+class RelatedMovies: CoreViewController, UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
 
     @IBOutlet var filmsTable: UITableView!
     var keywordResponse: searchKeywordResponse?
@@ -16,9 +16,13 @@ class RelatedMovies: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataS
     var keywordID: Int?
     var movies: [TMDBMovie] = [TMDBMovie]()
     var isMoviesLoaded: Bool = false
+    var image: Photo!
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
     override func viewDidLoad() {
         super.viewDidLoad()
         filmsTable.delegate = self
+        filmsTable.dataSource = self
         self.filmsTable.emptyDataSetSource = self
         filmsTable.emptyDataSetDelegate = self
         filmsTable.tableFooterView = UIView()
@@ -26,10 +30,27 @@ class RelatedMovies: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataS
         print(query!)
         keywordID = keywordResponse!.keywordID
         print(keywordID)
+        
+        // Core data stuff
+        // Setting up a fetch request
+        //let stack = appDelegate.stack
+        
+        // Create   the fetch request
+        //let fr = NSFetchRequest(entityName: "Photo")
+        //fr.sortDescriptors = []
+       // fr.predicate = NSPredicate(format: "pin == %@", self.)
+        
+        // Create a fetched results controller
+        //fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+       // executeSearch()
+
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        // initializing image
+        let currImage = Photo(context: appDelegate.stack.context)
+        image = currImage
         TMDBClient.sharedInstance().getListKeywordID(keywordID!) {
             (results, error) in
             if let results = results {
@@ -43,14 +64,24 @@ class RelatedMovies: UITableViewController, DZNEmptyDataSetSource, DZNEmptyDataS
             }
         }
     }
+    
+    func saveCurrentState() {
+        do {
+            try appDelegate.stack.saveContext()
+        } catch {
+            print("Error while saving from resignActive")
+        }
+    }
+
 }
 
+// MARK: Table View Functions
 extension RelatedMovies {
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return movies.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let reuseID = "movieCell"
         let movie = movies[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseID) as UITableViewCell!
@@ -76,8 +107,31 @@ extension RelatedMovies {
         return cell
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 100
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+    }
+    
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let saveAction = UITableViewRowAction(style: UITableViewRowActionStyle.Destructive, title: "Save", handler: {(action, indexPath) -> Void in
+            
+            let films = self.image.movies?.mutableCopy() as! NSMutableOrderedSet
+            print(films.count)
+            let aFilm = self.movies[indexPath.row] 
+            let currFilm = Movie(film: aFilm, context: self.appDelegate.stack.context)
+            films.addObject(currFilm)
+            //self.image.movies = films.copy() as? NSOrderedSet
+           // self.image.image = UIImagePNGRepresentation(SelectedPhoto.selectedImage)
+            print("about to save")
+            tableView.editing = false
+            //self.saveCurrentState()
+        })
+        // Set the button color
+        saveAction.backgroundColor = UIColor(red: 28.0/255.0, green: 165.0/255.0, blue: 253.0/255.0, alpha: 1.0)
+        return [saveAction]
     }
     
     func titleForEmptyDataSet(scrollView: UIScrollView) -> NSAttributedString? {
