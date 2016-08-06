@@ -1,4 +1,6 @@
-# MoviePicker
+# :tada: MoviePicker :tada:
+
+### Use Clarifai API to pick movies from TMDB by recognizing images.
 
 Requires following dependencies:
 `Alamofire`
