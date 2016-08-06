@@ -28,10 +28,10 @@
 		0E9777FF1D3BFEF8000FF138 /* TMDBConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9777FE1D3BFEF8000FF138 /* TMDBConfig.swift */; };
 		0E9778011D3BFF52000FF138 /* TMDBConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9778001D3BFF52000FF138 /* TMDBConvenience.swift */; };
 		0EBB0CD41D54C0680050176B /* CoreDataTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBB0CD31D54C0680050176B /* CoreDataTableViewController.swift */; };
+		0EBB0CE31D5508740050176B /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBB0CE11D5508740050176B /* Photo+CoreDataProperties.swift */; };
+		0EBB0CE41D5508740050176B /* Movie+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBB0CE21D5508740050176B /* Movie+CoreDataProperties.swift */; };
 		0EC8A05F1D4F935C00586492 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A05D1D4F935C00586492 /* Model.xcdatamodeld */; };
-		0EC8A06C1D4F953D00586492 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A0681D4F953D00586492 /* Photo+CoreDataProperties.swift */; };
 		0EC8A06D1D4F953D00586492 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A0691D4F953D00586492 /* Photo.swift */; };
-		0EC8A06E1D4F953D00586492 /* Movie+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A06A1D4F953D00586492 /* Movie+CoreDataProperties.swift */; };
 		0EC8A06F1D4F953D00586492 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A06B1D4F953D00586492 /* Movie.swift */; };
 		0EC8A0711D4F957D00586492 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A0701D4F957D00586492 /* CoreDataStack.swift */; };
 		0EC8A0741D4FA2E100586492 /* SelectedPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A0731D4FA2E100586492 /* SelectedPhoto.swift */; };
@@ -89,10 +89,10 @@
 		0E9777FE1D3BFEF8000FF138 /* TMDBConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBConfig.swift; sourceTree = "<group>"; };
 		0E9778001D3BFF52000FF138 /* TMDBConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBConvenience.swift; sourceTree = "<group>"; };
 		0EBB0CD31D54C0680050176B /* CoreDataTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataTableViewController.swift; sourceTree = "<group>"; };
+		0EBB0CE11D5508740050176B /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0EBB0CE21D5508740050176B /* Movie+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0EC8A05E1D4F935C00586492 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
-		0EC8A0681D4F953D00586492 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0EC8A0691D4F953D00586492 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
-		0EC8A06A1D4F953D00586492 /* Movie+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0EC8A06B1D4F953D00586492 /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		0EC8A0701D4F957D00586492 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		0EC8A0731D4FA2E100586492 /* SelectedPhoto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedPhoto.swift; sourceTree = "<group>"; };
@@ -211,9 +211,9 @@
 			isa = PBXGroup;
 			children = (
 				0EC8A0721D4FA2B700586492 /* Clients */,
-				0EC8A0681D4F953D00586492 /* Photo+CoreDataProperties.swift */,
 				0EC8A0691D4F953D00586492 /* Photo.swift */,
-				0EC8A06A1D4F953D00586492 /* Movie+CoreDataProperties.swift */,
+				0EBB0CE11D5508740050176B /* Photo+CoreDataProperties.swift */,
+				0EBB0CE21D5508740050176B /* Movie+CoreDataProperties.swift */,
 				0EC8A06B1D4F953D00586492 /* Movie.swift */,
 				0EC8A05D1D4F935C00586492 /* Model.xcdatamodeld */,
 				0EC8A0701D4F957D00586492 /* CoreDataStack.swift */,
@@ -467,7 +467,6 @@
 				0E09617C1D4A26F5008C1D1D /* TMDBKeyword.swift in Sources */,
 				0EC8A05F1D4F935C00586492 /* Model.xcdatamodeld in Sources */,
 				0E9777F91D3BF84D000FF138 /* TMDBMovie.swift in Sources */,
-				0EC8A06E1D4F953D00586492 /* Movie+CoreDataProperties.swift in Sources */,
 				0E9777FF1D3BFEF8000FF138 /* TMDBConfig.swift in Sources */,
 				0E7589D41D4BB08600709D4D /* RelatedMovies.swift in Sources */,
 				0EBB0CD41D54C0680050176B /* CoreDataTableViewController.swift in Sources */,
@@ -484,7 +483,8 @@
 				0E9777FB1D3BFBB5000FF138 /* GCDBlackBox.swift in Sources */,
 				0E9778011D3BFF52000FF138 /* TMDBConvenience.swift in Sources */,
 				0EC8A07A1D4FBA0100586492 /* CoreViewController.swift in Sources */,
-				0EC8A06C1D4F953D00586492 /* Photo+CoreDataProperties.swift in Sources */,
+				0EBB0CE31D5508740050176B /* Photo+CoreDataProperties.swift in Sources */,
+				0EBB0CE41D5508740050176B /* Movie+CoreDataProperties.swift in Sources */,
 				0E9777F21D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

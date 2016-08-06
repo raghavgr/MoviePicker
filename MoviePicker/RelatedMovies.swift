@@ -18,7 +18,6 @@ class RelatedMovies: CoreViewController, UITableViewDataSource, UITableViewDeleg
     var isMoviesLoaded: Bool = false
     var image: Photo!
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-
     override func viewDidLoad() {
         super.viewDidLoad()
         filmsTable.delegate = self
@@ -49,8 +48,8 @@ class RelatedMovies: CoreViewController, UITableViewDataSource, UITableViewDeleg
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         // initializing image
-        let currImage = Photo(context: appDelegate.stack.context)
-        image = currImage
+        //let currImage = Photo(context: appDelegate.stack.context)
+        //image = currImage
         TMDBClient.sharedInstance().getListKeywordID(keywordID!) {
             (results, error) in
             if let results = results {
@@ -117,17 +116,18 @@ extension RelatedMovies {
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let saveAction = UITableViewRowAction(style: UITableViewRowActionStyle.Destructive, title: "Save", handler: {(action, indexPath) -> Void in
+           // print(self.isTest)
             
-            let films = self.image.movies?.mutableCopy() as! NSMutableOrderedSet
-            print(films.count)
-            let aFilm = self.movies[indexPath.row] 
-            let currFilm = Movie(film: aFilm, context: self.appDelegate.stack.context)
-            films.addObject(currFilm)
-            //self.image.movies = films.copy() as? NSOrderedSet
-           // self.image.image = UIImagePNGRepresentation(SelectedPhoto.selectedImage)
+            print(self.image.movies!.count)
+            let aFilm = self.movies[indexPath.row]
+            let currFilm = Movie(film: aFilm, photo: self.image, context: self.appDelegate.stack.context)
+            
+            var films = self.image.movies?.allObjects as! [Movie]
+            films.append(currFilm)
+            self.image.image = UIImagePNGRepresentation(SelectedPhoto.selectedImage)
             print("about to save")
             tableView.editing = false
-            //self.saveCurrentState()
+            self.saveCurrentState()
         })
         // Set the button color
         saveAction.backgroundColor = UIColor(red: 28.0/255.0, green: 165.0/255.0, blue: 253.0/255.0, alpha: 1.0)
@@ -158,7 +158,7 @@ extension RelatedMovies {
                 return nil
             }
         } else {
-            let text = "The Movie DB will show related movies"
+            let text = "Swipe right to save a movie. 💾"
             print("Keyword: inside dzn method for description")
             return NSAttributedString(string: text, attributes: [
                 NSForegroundColorAttributeName: UIColor.grayColor()

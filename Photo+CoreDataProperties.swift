@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  
 //
-//  Created by Sai Grandhi on 8/1/16.
+//  Created by Sai Grandhi on 8/5/16.
 //
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -15,6 +15,6 @@ import CoreData
 extension Photo {
 
     @NSManaged var image: NSData?
-    @NSManaged var movies: NSOrderedSet?
+    @NSManaged var movies: NSSet?
 
 }

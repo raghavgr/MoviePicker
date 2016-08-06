@@ -43,7 +43,10 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
 
     // MARK: when user loads an existing photo over here
     var photo: Photo!
+    var isSavedPhoto: Bool = false
     
+    // MARK: Core data 
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,7 +75,13 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
         
     }
     
-
+    func saveCurrentState() {
+        do {
+            try self.appDelegate.stack.saveContext()
+        } catch {
+            print("Error while saving from resignActive")
+        }
+    }
     
     @IBAction func refreshUI(sender: AnyObject) {
         cleanUpUI(false)
@@ -108,7 +117,7 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
     // MARK: Image Picker Functions
     @IBAction func imageSelector(sender: AnyObject) {
         reArrangeUIButton.enabled = true
-        
+        // check if camera as a source is available
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             picker.sourceType = UIImagePickerControllerSourceType.Camera
             self.presentViewController(picker, animated: true, completion: nil)
@@ -244,6 +253,12 @@ extension ShowImageAndTags {
         if tableView == self.keywordsTable {
             let destinationVC = storyboard?.instantiateViewControllerWithIdentifier("RelatedMoviesVC") as! RelatedMovies
             destinationVC.keywordResponse = keywords[indexPath.row]
+            if isSavedPhoto {
+                destinationVC.image = photo
+            } else {
+                destinationVC.image = Photo(pic: resultImage.image!, context: appDelegate.stack.context)
+                self.saveCurrentState()
+            }
             destinationVC.navigationItem.title = "Related Movies"
             navigationController?.pushViewController(destinationVC, animated: true)
         }
