@@ -57,14 +57,16 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return allPhotos.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
        // let pic = allPhotos[indexPath.row]
         //let image = UIImage(data: pic.image!)
         print("inside cellforeItem collection")
-        let collectionCellImage = UIImage(named: "Camera")
+        let pic = allPhotos[indexPath.row]
+        let anImage = pic.image
+        let collectionCellImage = UIImage(data: anImage!)
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! ImageCollectionCell
         cell.imageView.image = collectionCellImage
         return cell

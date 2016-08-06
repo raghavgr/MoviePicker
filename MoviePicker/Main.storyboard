@@ -426,41 +426,82 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2uv-Fb-jOK">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="eP7-xu-72a">
-                                    <size key="itemSize" width="50" height="50"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="eP7-xu-72a">
+                                    <size key="itemSize" width="170" height="170"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="LQQ-AC-ost">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageCollectionCell" id="LQQ-AC-ost" customClass="ImageCollectionCell" customModule="MoviePicker" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="170" height="170"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M1i-6K-c7X">
+                                                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                                    <variation key="widthClass=compact" fixedFrame="YES">
+                                                        <rect key="frame" x="0.0" y="0.0" width="170" height="170"/>
+                                                    </variation>
+                                                </imageView>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <size key="customSize" width="170" height="170"/>
+                                        <variation key="default">
+                                            <mask key="subviews">
+                                                <exclude reference="M1i-6K-c7X"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="widthClass=compact">
+                                            <mask key="subviews">
+                                                <include reference="M1i-6K-c7X"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <outlet property="imageView" destination="M1i-6K-c7X" id="Hji-IC-xfW"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
-                                <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="0.0" y="0.0" width="400" height="551"/>
-                                </variation>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="2uv-Fb-jOK" firstAttribute="top" secondItem="WUF-e2-v3P" secondAttribute="top" id="L1b-AA-I7I"/>
+                            <constraint firstItem="2uv-Fb-jOK" firstAttribute="leading" secondItem="WUF-e2-v3P" secondAttribute="leading" id="Nxb-TJ-aIp"/>
+                            <constraint firstItem="2uv-Fb-jOK" firstAttribute="bottom" secondItem="CKK-Rp-Ver" secondAttribute="top" id="dw1-Fm-S6i"/>
+                            <constraint firstAttribute="trailing" secondItem="2uv-Fb-jOK" secondAttribute="trailing" id="hCs-3p-yxq"/>
+                        </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="2uv-Fb-jOK"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="L1b-AA-I7I"/>
+                                <exclude reference="Nxb-TJ-aIp"/>
+                                <exclude reference="dw1-Fm-S6i"/>
+                                <exclude reference="hCs-3p-yxq"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="2uv-Fb-jOK"/>
                             </mask>
+                            <mask key="constraints">
+                                <include reference="L1b-AA-I7I"/>
+                                <include reference="Nxb-TJ-aIp"/>
+                                <include reference="dw1-Fm-S6i"/>
+                                <include reference="hCs-3p-yxq"/>
+                            </mask>
                         </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Saved Images" id="LDH-Ud-Kqy"/>
+                    <connections>
+                        <outlet property="photosCollection" destination="2uv-Fb-jOK" id="Aj1-XF-5aB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h3p-zi-zAt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -38,9 +38,10 @@ class ClarifaiClient {
                     response in
                     switch response.result {
                     case .Success(let result):
+                        print("Validation Successful. Got access token")
                         let tokenResult = responseForToken(jsonResponse: result as! NSDictionary)
                         self.saveCurrentToken(tokenResult)
-                        print("Validation Successful. Got access token")
+                        
                     case .Failure(let errorString):
                         completionHandlerForAccessToken(errorString: errorString)
                     }
@@ -50,18 +51,18 @@ class ClarifaiClient {
     }
     
     func saveCurrentToken(result: responseForToken) {
-        if let token = result.token, expiryTime = result.lastingTime {
+      //  if let token = result.token, expiryTime = result.lastingTime {
             let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-            let expiration: NSDate = NSDate(timeIntervalSinceNow: expiryTime)
-            
+            let expiration: NSDate = NSDate(timeIntervalSinceNow: result.lastingTime!)
+            print("in save current token")
             defaults.setValue(self.appID, forKey: Config.clientID)
-            defaults.setValue(token, forKey: Config.AccessToken)
+            defaults.setValue(result.token, forKey: Config.AccessToken)
             defaults.setValue(expiration, forKey: Config.AccessTokenExpiryTime)
             defaults.synchronize()
             
-            self.accessToken = token
+            self.accessToken = result.token
             self.accessTokenExpiration = expiration
-        }
+       // }
     }
     
     func cancelAccessToken() {

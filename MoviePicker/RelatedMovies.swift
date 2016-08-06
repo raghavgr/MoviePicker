@@ -17,6 +17,7 @@ class RelatedMovies: CoreViewController, UITableViewDataSource, UITableViewDeleg
     var movies: [TMDBMovie] = [TMDBMovie]()
     var isMoviesLoaded: Bool = false
     var image: Photo!
+    var films = [Movie]()
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -122,8 +123,8 @@ extension RelatedMovies {
             let aFilm = self.movies[indexPath.row]
             let currFilm = Movie(film: aFilm, photo: self.image, context: self.appDelegate.stack.context)
             
-            var films = self.image.movies?.allObjects as! [Movie]
-            films.append(currFilm)
+            self.films = self.image.movies?.allObjects as! [Movie]
+            self.films.append(currFilm)
             self.image.image = UIImagePNGRepresentation(SelectedPhoto.selectedImage)
             print("about to save")
             tableView.editing = false

@@ -24,8 +24,6 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
     
     @IBOutlet weak var reArrangeUIButton: UIBarButtonItem!
     
-    private lazy var client : ClarifaiClient = ClarifaiClient(appClarifaiID: clarifaiAppID, appClarifaiSecret: clarifaiSecret)
-    
     var si: SelectedPhoto = SelectedPhoto.sharedInstance
     let picker = UIImagePickerController()
     var allLabels: Set<String> = []
@@ -137,6 +135,8 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
         resultImage.contentMode = UIViewContentMode.ScaleAspectFill
         resultImage.clipsToBounds = true
         SelectedPhoto.selectedImage = image!
+        photo = Photo(pic: image!, context: self.appDelegate.stack.context)
+        self.saveCurrentState()
         cleanUpUI(true)
         recognizeImage(image)
         
@@ -253,12 +253,7 @@ extension ShowImageAndTags {
         if tableView == self.keywordsTable {
             let destinationVC = storyboard?.instantiateViewControllerWithIdentifier("RelatedMoviesVC") as! RelatedMovies
             destinationVC.keywordResponse = keywords[indexPath.row]
-            if isSavedPhoto {
-                destinationVC.image = photo
-            } else {
-                destinationVC.image = Photo(pic: resultImage.image!, context: appDelegate.stack.context)
-                self.saveCurrentState()
-            }
+            destinationVC.image = photo
             destinationVC.navigationItem.title = "Related Movies"
             navigationController?.pushViewController(destinationVC, animated: true)
         }
