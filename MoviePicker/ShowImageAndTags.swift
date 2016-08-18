@@ -48,14 +48,15 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.customAlert.addAction(retry)
         // initialising Clarifai Client
         clarifai = ClarifaiClient(appClarifaiID: clarifaiAppID, appClarifaiSecret: clarifaiSecret)
+        self.customAlert.addAction(retry)
+ 
         picker.delegate = self
         reArrangeUIButton.enabled = false
         classesTable.delegate = self
         classesTable.dataSource = self
-        classesTable.emptyDataSetSource = self
+        classesTable.emptyDataSetDelegate = self
         self.classesTable.emptyDataSetSource = self
             //classesTable.emptyDataSetDelegate = self
 

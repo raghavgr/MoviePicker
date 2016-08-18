@@ -51,18 +51,19 @@ class ClarifaiClient {
     }
     
     func saveCurrentToken(result: responseForToken) {
-      //  if let token = result.token, expiryTime = result.lastingTime {
+        if let token = result.token, expiryTime = result.lastingTime {
             let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-            let expiration: NSDate = NSDate(timeIntervalSinceNow: result.lastingTime!)
+            let expiration: NSDate = NSDate(timeIntervalSinceNow: expiryTime)
             print("in save current token")
             defaults.setValue(self.appID, forKey: Config.clientID)
             defaults.setValue(result.token, forKey: Config.AccessToken)
             defaults.setValue(expiration, forKey: Config.AccessTokenExpiryTime)
             defaults.synchronize()
             
-            self.accessToken = result.token
+            self.accessToken = token
             self.accessTokenExpiration = expiration
-       // }
+            getAccessToken()
+        }
     }
     
     func cancelAccessToken() {
@@ -80,9 +81,16 @@ class ClarifaiClient {
         let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
         
         if self.appID != defaults.stringForKey(Config.clientID){
-            self.cancelAccessToken()
+            
+            self.checkAccessToken() {
+                (error) in
+                if error != nil {
+                    print(error)
+                }
+            }
         } else {
             self.accessToken = defaults.stringForKey(Config.AccessToken)!
+            print(self.accessToken)
             self.accessTokenExpiration = defaults.objectForKey(Config.AccessTokenExpiryTime)! as? NSDate
         }
     }

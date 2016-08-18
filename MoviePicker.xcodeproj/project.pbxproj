@@ -18,6 +18,9 @@
 		0E4F6EDA1D38BC6300515DAD /* ClarifaiConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F6ED91D38BC6300515DAD /* ClarifaiConstants.swift */; };
 		0E4F6EDC1D38BC7500515DAD /* ClarifaiClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4F6EDB1D38BC7500515DAD /* ClarifaiClient.swift */; };
 		0E5826E71D4B28FB00D58686 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E5826E61D4B28FB00D58686 /* Main.storyboard */; };
+		0E5A42691D65A94A00084E5B /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5A42671D65A94A00084E5B /* Photo+CoreDataProperties.swift */; };
+		0E5A426A1D65A94A00084E5B /* Movie+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5A42681D65A94A00084E5B /* Movie+CoreDataProperties.swift */; };
+		0E5A426C1D65E25700084E5B /* ShowFilms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5A426B1D65E25700084E5B /* ShowFilms.swift */; };
 		0E7589D41D4BB08600709D4D /* RelatedMovies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7589D31D4BB08600709D4D /* RelatedMovies.swift */; };
 		0E8C23F81D4279FD00D44CDA /* ShowImageAndTags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8C23F71D4279FD00D44CDA /* ShowImageAndTags.swift */; };
 		0E9777F21D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E9777F11D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m */; };
@@ -28,8 +31,6 @@
 		0E9777FF1D3BFEF8000FF138 /* TMDBConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9777FE1D3BFEF8000FF138 /* TMDBConfig.swift */; };
 		0E9778011D3BFF52000FF138 /* TMDBConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9778001D3BFF52000FF138 /* TMDBConvenience.swift */; };
 		0EBB0CD41D54C0680050176B /* CoreDataTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBB0CD31D54C0680050176B /* CoreDataTableViewController.swift */; };
-		0EBB0CE31D5508740050176B /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBB0CE11D5508740050176B /* Photo+CoreDataProperties.swift */; };
-		0EBB0CE41D5508740050176B /* Movie+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EBB0CE21D5508740050176B /* Movie+CoreDataProperties.swift */; };
 		0EC8A05F1D4F935C00586492 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A05D1D4F935C00586492 /* Model.xcdatamodeld */; };
 		0EC8A06D1D4F953D00586492 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A0691D4F953D00586492 /* Photo.swift */; };
 		0EC8A06F1D4F953D00586492 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC8A06B1D4F953D00586492 /* Movie.swift */; };
@@ -76,6 +77,9 @@
 		0E4F6ED91D38BC6300515DAD /* ClarifaiConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClarifaiConstants.swift; sourceTree = "<group>"; };
 		0E4F6EDB1D38BC7500515DAD /* ClarifaiClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClarifaiClient.swift; sourceTree = "<group>"; };
 		0E5826E61D4B28FB00D58686 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		0E5A42671D65A94A00084E5B /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0E5A42681D65A94A00084E5B /* Movie+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0E5A426B1D65E25700084E5B /* ShowFilms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowFilms.swift; sourceTree = "<group>"; };
 		0E7589D31D4BB08600709D4D /* RelatedMovies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RelatedMovies.swift; sourceTree = "<group>"; };
 		0E8C23F71D4279FD00D44CDA /* ShowImageAndTags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowImageAndTags.swift; sourceTree = "<group>"; };
 		0E9777EE1D3BC7E8000FF138 /* test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = test.playground; sourceTree = "<group>"; };
@@ -89,8 +93,6 @@
 		0E9777FE1D3BFEF8000FF138 /* TMDBConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBConfig.swift; sourceTree = "<group>"; };
 		0E9778001D3BFF52000FF138 /* TMDBConvenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TMDBConvenience.swift; sourceTree = "<group>"; };
 		0EBB0CD31D54C0680050176B /* CoreDataTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataTableViewController.swift; sourceTree = "<group>"; };
-		0EBB0CE11D5508740050176B /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		0EBB0CE21D5508740050176B /* Movie+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Movie+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0EC8A05E1D4F935C00586492 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		0EC8A0691D4F953D00586492 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		0EC8A06B1D4F953D00586492 /* Movie.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
@@ -212,8 +214,8 @@
 			children = (
 				0EC8A0721D4FA2B700586492 /* Clients */,
 				0EC8A0691D4F953D00586492 /* Photo.swift */,
-				0EBB0CE11D5508740050176B /* Photo+CoreDataProperties.swift */,
-				0EBB0CE21D5508740050176B /* Movie+CoreDataProperties.swift */,
+				0E5A42671D65A94A00084E5B /* Photo+CoreDataProperties.swift */,
+				0E5A42681D65A94A00084E5B /* Movie+CoreDataProperties.swift */,
 				0EC8A06B1D4F953D00586492 /* Movie.swift */,
 				0EC8A05D1D4F935C00586492 /* Model.xcdatamodeld */,
 				0EC8A0701D4F957D00586492 /* CoreDataStack.swift */,
@@ -229,6 +231,7 @@
 				0E01C7481D49D64E003AD77E /* KeywordSimilarTable.swift */,
 				0E7589D31D4BB08600709D4D /* RelatedMovies.swift */,
 				0EC8A0771D4FB9C800586492 /* SavedMoviesCollection.swift */,
+				0E5A426B1D65E25700084E5B /* ShowFilms.swift */,
 				0EC8A0791D4FBA0100586492 /* CoreViewController.swift */,
 				0EBB0CD31D54C0680050176B /* CoreDataTableViewController.swift */,
 			);
@@ -467,6 +470,7 @@
 				0E09617C1D4A26F5008C1D1D /* TMDBKeyword.swift in Sources */,
 				0EC8A05F1D4F935C00586492 /* Model.xcdatamodeld in Sources */,
 				0E9777F91D3BF84D000FF138 /* TMDBMovie.swift in Sources */,
+				0E5A426C1D65E25700084E5B /* ShowFilms.swift in Sources */,
 				0E9777FF1D3BFEF8000FF138 /* TMDBConfig.swift in Sources */,
 				0E7589D41D4BB08600709D4D /* RelatedMovies.swift in Sources */,
 				0EBB0CD41D54C0680050176B /* CoreDataTableViewController.swift in Sources */,
@@ -483,8 +487,8 @@
 				0E9777FB1D3BFBB5000FF138 /* GCDBlackBox.swift in Sources */,
 				0E9778011D3BFF52000FF138 /* TMDBConvenience.swift in Sources */,
 				0EC8A07A1D4FBA0100586492 /* CoreViewController.swift in Sources */,
-				0EBB0CE31D5508740050176B /* Photo+CoreDataProperties.swift in Sources */,
-				0EBB0CE41D5508740050176B /* Movie+CoreDataProperties.swift in Sources */,
+				0E5A42691D65A94A00084E5B /* Photo+CoreDataProperties.swift in Sources */,
+				0E5A426A1D65A94A00084E5B /* Movie+CoreDataProperties.swift in Sources */,
 				0E9777F21D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

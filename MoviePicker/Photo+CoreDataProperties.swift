@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  
 //
-//  Created by Sai Grandhi on 8/5/16.
+//  Created by Sai Grandhi on 8/18/16.
 //
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu

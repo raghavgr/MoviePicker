@@ -10,30 +10,62 @@ import UIKit
 import CoreData
 private let reuseIdentifier = "imageCollectionCell"
 
-class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UICollectionViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
     
     @IBOutlet weak var photosCollection: UICollectionView!
     
     var allPhotos = [Photo]()
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-   
+    var screenSize: CGRect!
+    var screenWidth: CGFloat!
+    var screenHeight: CGFloat!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        screenSize = UIScreen.mainScreen().bounds
+        screenWidth = screenSize.width
+        screenHeight = screenSize.height
+        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 0, bottom: 10, right: 0)
+        layout.itemSize = CGSize(width: screenWidth / 3, height: screenWidth / 3)
+        
+        
         
         photosCollection.delegate = self
         photosCollection.dataSource = self
-       // self.photosCollection.emptyDataSetSource = self
-       // photosCollection.emptyDataSetDelegate = self
-        
+        photosCollection.collectionViewLayout = layout
+        self.automaticallyAdjustsScrollViewInsets = false
+        self.photosCollection.emptyDataSetSource = self
+        photosCollection.emptyDataSetDelegate = self
         let stack = appDelegate.stack
         let fr = NSFetchRequest(entityName: "Photo")
         fr.sortDescriptors = []
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr,
                                                               managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        executeSearch()
         
-        allPhotos = getPhotos()
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        executeSearch()
+        allPhotos = getPhotos()
+        performUIUpdatesOnMain {
+            self.photosCollection.reloadData()
+        }
+        print("pics will appear: \(allPhotos.count)")
+
+    }
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        executeSearch()
+        //allPhotos = getPhotos()
+        
+        //print("pics did appear: \(allPhotos.count)")
+
+    }
+    
     // MARK: Core Data Helpers
     func saveCurrentState() {
         do {
@@ -55,7 +87,9 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
             return [Photo]()
         }
     }
-    
+}
+extension SavedMoviesCollection {
+
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return allPhotos.count
     }
@@ -69,7 +103,39 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
         let collectionCellImage = UIImage(data: anImage!)
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! ImageCollectionCell
         cell.imageView.image = collectionCellImage
+        
+       
+        
+        //cell.imageView.image = UIImage(named: "placeholder")
         return cell
     }
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        print("screenwidth: \(screenWidth)")
+        return CGSize(width: screenWidth/2, height: screenWidth/2)
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+         
+    }
+}
+
+extension SavedMoviesCollection {
+    // MARK: DZNEmptyDataSet functions
+    func titleForEmptyDataSet(scrollView: UIScrollView) -> NSAttributedString? {
+        return NSAttributedString(string: "No saved movies 🎬")
+        
+    }
+    
+    func descriptionForEmptyDataSet(scrollView: UIScrollView) -> NSAttributedString? {
+        let text = "Add an image and select your films"
+        return NSAttributedString(string: text, attributes: [
+            NSForegroundColorAttributeName: UIColor.grayColor()
+            ])
+    }
+    
+    func imageForEmptyDataSet(scrollView: UIScrollView) -> UIImage? {
+        return UIImage(named: "Movie")
+    }
+
 }
 

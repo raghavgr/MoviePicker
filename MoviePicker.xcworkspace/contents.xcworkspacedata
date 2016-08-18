@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Photo+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
-      location = "group:Movie+CoreDataProperties.swift">
-   </FileRef>
-   <FileRef
       location = "group:MoviePicker.xcodeproj">
    </FileRef>
    <FileRef
