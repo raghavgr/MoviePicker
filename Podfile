@@ -1,3 +1,9 @@
+platform :ios, '9.0'
 use_frameworks!
-pod 'Alamofire'
-pod 'SwiftyJSON'
+
+target 'MoviePicker' do
+    pod 'Alamofire'
+    pod 'SwiftyJSON'
+end
+
+
