@@ -109,20 +109,20 @@ extension SavedMoviesCollection {
         //cell.imageView.image = UIImage(named: "placeholder")
         return cell
     }
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        print("screenwidth: \(screenWidth)")
-        return CGSize(width: screenWidth/2, height: screenWidth/2)
-    }
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-         
+        let destinationVC = storyboard?.instantiateViewControllerWithIdentifier("ShowFilmsVC") as! ShowFilms
+        let currentPic = allPhotos[indexPath.row]
+        destinationVC.image = currentPic
+        navigationController?.pushViewController(destinationVC, animated: true)
     }
+
 }
 
 extension SavedMoviesCollection {
     // MARK: DZNEmptyDataSet functions
     func titleForEmptyDataSet(scrollView: UIScrollView) -> NSAttributedString? {
-        return NSAttributedString(string: "No saved movies 🎬")
+        return NSAttributedString(string: "No images selected 📷")
         
     }
     
@@ -134,7 +134,7 @@ extension SavedMoviesCollection {
     }
     
     func imageForEmptyDataSet(scrollView: UIScrollView) -> UIImage? {
-        return UIImage(named: "Movie")
+        return UIImage(named: "Camera")
     }
 
 }

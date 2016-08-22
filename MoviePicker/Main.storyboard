@@ -424,18 +424,18 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2uv-Fb-jOK">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="5" id="eP7-xu-72a">
-                                    <size key="itemSize" width="120" height="120"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="eP7-xu-72a">
+                                    <size key="itemSize" width="250" height="250"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                    <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageCollectionCell" id="LQQ-AC-ost" customClass="ImageCollectionCell" customModule="MoviePicker" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="250" height="250"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M1i-6K-c7X">
@@ -445,21 +445,20 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="M1i-6K-c7X" secondAttribute="trailing" id="1pn-JB-wOi"/>
-                                            <constraint firstItem="M1i-6K-c7X" firstAttribute="top" secondItem="LQQ-AC-ost" secondAttribute="top" id="Y2O-fc-S4q"/>
-                                            <constraint firstAttribute="bottom" secondItem="M1i-6K-c7X" secondAttribute="bottom" id="nYf-dW-ec3"/>
-                                            <constraint firstItem="M1i-6K-c7X" firstAttribute="leading" secondItem="LQQ-AC-ost" secondAttribute="leading" id="sEU-kX-37T"/>
+                                            <constraint firstItem="M1i-6K-c7X" firstAttribute="top" secondItem="LQQ-AC-ost" secondAttribute="top" id="B5s-sI-EuW"/>
+                                            <constraint firstAttribute="bottom" secondItem="M1i-6K-c7X" secondAttribute="bottom" id="G4m-pf-BnB"/>
+                                            <constraint firstItem="M1i-6K-c7X" firstAttribute="leading" secondItem="LQQ-AC-ost" secondAttribute="leading" id="KlC-0u-Vwi"/>
+                                            <constraint firstAttribute="trailing" secondItem="M1i-6K-c7X" secondAttribute="trailing" id="YJq-51-Srh"/>
                                         </constraints>
-                                        <size key="customSize" width="120" height="120"/>
                                         <variation key="default">
                                             <mask key="subviews">
                                                 <exclude reference="M1i-6K-c7X"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <exclude reference="1pn-JB-wOi"/>
-                                                <exclude reference="Y2O-fc-S4q"/>
-                                                <exclude reference="nYf-dW-ec3"/>
-                                                <exclude reference="sEU-kX-37T"/>
+                                                <exclude reference="B5s-sI-EuW"/>
+                                                <exclude reference="G4m-pf-BnB"/>
+                                                <exclude reference="KlC-0u-Vwi"/>
+                                                <exclude reference="YJq-51-Srh"/>
                                             </mask>
                                         </variation>
                                         <variation key="widthClass=compact">
@@ -467,10 +466,10 @@
                                                 <include reference="M1i-6K-c7X"/>
                                             </mask>
                                             <mask key="constraints">
-                                                <include reference="1pn-JB-wOi"/>
-                                                <include reference="Y2O-fc-S4q"/>
-                                                <include reference="nYf-dW-ec3"/>
-                                                <include reference="sEU-kX-37T"/>
+                                                <include reference="B5s-sI-EuW"/>
+                                                <include reference="G4m-pf-BnB"/>
+                                                <include reference="KlC-0u-Vwi"/>
+                                                <include reference="YJq-51-Srh"/>
                                             </mask>
                                         </variation>
                                         <connections>
@@ -519,10 +518,10 @@
             </objects>
             <point key="canvasLocation" x="2319" y="1453"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Show Films-->
         <scene sceneID="LLK-Qt-GvT">
             <objects>
-                <tableViewController storyboardIdentifier="ShowFilmsVC" id="DGj-lk-WpH" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="ShowFilmsVC" id="DGj-lk-WpH" customClass="ShowFilms" customModule="MoviePicker" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="rLO-8v-Qjz">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -539,14 +538,14 @@
                                             <rect key="frame" x="15" y="6" width="31.5" height="19.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ZaZ-wn-9pS">
                                             <rect key="frame" x="15" y="25.5" width="40.5" height="13.5"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -558,6 +557,9 @@
                             <outlet property="delegate" destination="DGj-lk-WpH" id="mqX-VI-Ow9"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="filmsTable" destination="rLO-8v-Qjz" id="I24-tU-uyX"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vl3-2f-m8I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
