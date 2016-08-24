@@ -2,7 +2,7 @@
 //  Movie+CoreDataProperties.swift
 //  
 //
-//  Created by Sai Grandhi on 8/18/16.
+//  Created by Sai Grandhi on 8/24/16.
 //
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -18,6 +18,7 @@ extension Movie {
     @NSManaged var posterPath: String?
     @NSManaged var rating: NSNumber?
     @NSManaged var title: String?
+    @NSManaged var whyWatch: String?
     @NSManaged var photo: Photo?
 
 }

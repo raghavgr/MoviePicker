@@ -24,12 +24,14 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
     
     @IBOutlet weak var reArrangeUIButton: UIBarButtonItem!
     
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
+
     var si: SelectedPhoto = SelectedPhoto.sharedInstance
     let picker = UIImagePickerController()
     var allLabels: Set<String> = []
     // MARK: Alerts
     let customAlert = UIAlertController(title: nil, message: "", preferredStyle: UIAlertControllerStyle.Alert)
-    let retry = UIAlertAction(title: "Retry", style: UIAlertActionStyle.Cancel, handler: nil)
+    let retry = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
     
     // MARK: Bool values for DZNEmpty data set
     var isWordSelected: Bool = false
@@ -72,6 +74,7 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
         isKeywordsLoaded = false
         self.navigationItem.title = "Movie Picker"
         
+        loadingIndicator.hidden = true
     }
     
     func saveCurrentState() {
@@ -116,15 +119,30 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
     // MARK: Image Picker Functions
     @IBAction func imageSelector(sender: AnyObject) {
         reArrangeUIButton.enabled = true
-        // check if camera as a source is available
+        // use actionsheet to select picture source
+        let actionSheet = UIAlertController(title: "New Photo", message: nil, preferredStyle: .ActionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Camera", style: .Default, handler: {
+           action in
+            self.selectFromCamera()
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Gallery", style: .Default, handler: {
+            action in
+            self.selectFromGallery()
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        self.presentViewController(actionSheet, animated: true, completion: nil)
+
+    }
+    func selectFromCamera() {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
             picker.sourceType = UIImagePickerControllerSourceType.Camera
             self.presentViewController(picker, animated: true, completion: nil)
+ 
         } else {
-            selectFromGallery()
+            customAlert.message = "Camera source not available"
+            presentViewController(customAlert, animated: true, completion: nil)
         }
     }
-    
     func selectFromGallery() {
         picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
         self.presentViewController(picker, animated: true, completion: nil)
