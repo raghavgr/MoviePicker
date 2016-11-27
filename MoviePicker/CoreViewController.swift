@@ -11,7 +11,7 @@ import CoreData
 
 class CoreViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
-    var fetchedResultsController : NSFetchedResultsController?{
+    var fetchedResultsController : NSFetchedResultsController<NSFetchRequestResult>?{
         didSet{
             // Whenever the frc changes, we execute the search and
             // reload the table
@@ -20,7 +20,7 @@ class CoreViewController: UIViewController, NSFetchedResultsControllerDelegate {
         }
     }
     
-    init(fetchedResultsController fc : NSFetchedResultsController){
+    init(fetchedResultsController fc : NSFetchedResultsController<NSFetchRequestResult>){
         fetchedResultsController = fc
         super.init(nibName: nil, bundle: nil)
     }

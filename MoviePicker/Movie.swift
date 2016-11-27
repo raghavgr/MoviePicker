@@ -13,13 +13,14 @@ import CoreData
 class Movie: NSManagedObject {
 
 
-    convenience init(film: TMDBMovie, photo: Photo, context: NSManagedObjectContext) {
-        if let ent = NSEntityDescription.entityForName("Movie", inManagedObjectContext: context) {
-            self.init(entity: ent, insertIntoManagedObjectContext: context)
-            self.id = film.id 
+    convenience init(film: TMDBMovie, photo: Photo, reason: String, context: NSManagedObjectContext) {
+        if let ent = NSEntityDescription.entity(forEntityName: "Movie", in: context) {
+            self.init(entity: ent, insertInto: context)
+            self.id = film.id as NSNumber? 
             self.title = film.title
             self.posterPath = film.posterPath
-            self.rating = film.vote_avg
+            self.rating = film.vote_avg as NSNumber?
+            self.whyWatch = reason
             self.photo = photo
         } else {
             fatalError("Unable to find Entity Name")

@@ -12,7 +12,7 @@ class TMDBClient: NSObject {
     // MARK: Properties
     
     // shared session
-    var session = NSURLSession.sharedSession()
+    var session = URLSession.shared
     
     // configuration object
     var config = TMDBConfig()
@@ -25,22 +25,23 @@ class TMDBClient: NSObject {
     
     // MARK: GET
     
-    func taskForGETMethod(method: String, parameters: [String:AnyObject], completionHandlerForGET: (result: AnyObject!, error: NSError?) -> Void) -> NSURLSessionDataTask {
+    func taskForGETMethod(_ method: String, parameters: [String:AnyObject], completionHandlerForGET: @escaping (_ result: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         /* 1. Set the parameters */
         var parametersWithApiKey = parameters
-        parametersWithApiKey[ParameterKeys.ApiKey] = Constants.ApiKey
+        parametersWithApiKey[ParameterKeys.ApiKey] = Constants.ApiKey as AnyObject?
         
         /* 2/3. Build the URL, Configure the request */
-        let request = NSMutableURLRequest(URL: tmdbURLFromParameters(parametersWithApiKey, withPathExtension: method))
+        let request = URLRequest(url: tmdbURLFromParameters(parametersWithApiKey, withPathExtension: method))
         
         /* 4. Make the request */
-        let task = session.dataTaskWithRequest(request) { (data, response, error) in
+      
+        let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             
-            func sendError(error: String) {
+            func sendError(_ error: String) {
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
-                completionHandlerForGET(result: nil, error: NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
+                completionHandlerForGET(nil, NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
             }
             
             /* GUARD: Was there an error? */
@@ -50,7 +51,7 @@ class TMDBClient: NSObject {
             }
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode , statusCode >= 200 && statusCode <= 299 else {
                 sendError("Your request returned a status code other than 2xx!")
                 return
             }
@@ -62,8 +63,9 @@ class TMDBClient: NSObject {
             }
             
             /* 5/6. Parse the data and use the data (happens in completion handler) */
+            //self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET as! (Any?, NSError?) -> Void)
             self.convertDataWithCompletionHandler(data, completionHandlerForConvertData: completionHandlerForGET)
-        }
+        }) 
         
         /* 7. Start the request */
         task.resume()
@@ -71,23 +73,23 @@ class TMDBClient: NSObject {
         return task
     }
     
-    func taskForGETImage(size: String, filePath: String, completionHandlerForImage: (imageData: NSData?, error: NSError?) -> Void) -> NSURLSessionTask {
+    func taskForGETImage(_ size: String, filePath: String, completionHandlerForImage: @escaping (_ imageData: Data?, _ error: NSError?) -> Void) -> URLSessionTask {
         
         /* 1. Set the parameters */
         // There are none...
         
         /* 2/3. Build the URL and configure the request */
-        let baseURL = NSURL(string: config.baseImageURLString)!
-        let url = baseURL.URLByAppendingPathComponent(size).URLByAppendingPathComponent(filePath)
-        let request = NSURLRequest(URL: url)
+        let baseURL = URL(string: config.baseImageURLString)!
+        let url = baseURL.appendingPathComponent(size).appendingPathComponent(filePath)
+        let request = URLRequest(url: url)
         
         /* 4. Make the request */
-        let task = session.dataTaskWithRequest(request) { (data, response, error) in
+        let task = session.dataTask(with: request, completionHandler: { (data, response, error) in
             
-            func sendError(error: String) {
+            func sendError(_ error: String) {
                 print(error)
                 let userInfo = [NSLocalizedDescriptionKey : error]
-                completionHandlerForImage(imageData: nil, error: NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
+                completionHandlerForImage(nil, NSError(domain: "taskForGETMethod", code: 1, userInfo: userInfo))
             }
             
             /* GUARD: Was there an error? */
@@ -97,7 +99,7 @@ class TMDBClient: NSObject {
             }
             
             /* GUARD: Did we get a successful 2XX response? */
-            guard let statusCode = (response as? NSHTTPURLResponse)?.statusCode where statusCode >= 200 && statusCode <= 299 else {
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode , statusCode >= 200 && statusCode <= 299 else {
                 sendError("Your request returned a status code other than 2xx!")
                 return
             }
@@ -109,8 +111,8 @@ class TMDBClient: NSObject {
             }
             
             /* 5/6. Parse the data and use the data (happens in completion handler) */
-            completionHandlerForImage(imageData: data, error: nil)
-        }
+            completionHandlerForImage(data, nil)
+        }) 
         
         /* 7. Start the request */
         task.resume()
@@ -122,43 +124,75 @@ class TMDBClient: NSObject {
     // MARK: Helpers
     
     // substitute the key for the value that is contained within the method name
-    func subtituteKeyInMethod(method: String, key: String, value: String) -> String? {
-        if method.rangeOfString("{\(key)}") != nil {
-            return method.stringByReplacingOccurrencesOfString("{\(key)}", withString: value)
+    func subtituteKeyInMethod(_ method: String, key: String, value: String) -> String? {
+        if method.range(of: "{\(key)}") != nil {
+            return method.replacingOccurrences(of: "{\(key)}", with: value)
         } else {
             return nil
         }
     }
     
+    // MARK: - All purpose task method for images
+    
+    func taskForImageWithSize(_ size: String, filePath: String, completionHandler: @escaping (_ imageData: Data?, _ error: NSError?) ->  Void) -> URLSessionTask {
+        
+        func sendError(_ error: String) {
+            print(error)
+            let userInfo = [NSLocalizedDescriptionKey : error]
+            completionHandler(nil, NSError(domain: "taskForImageWithSize", code: 1, userInfo: userInfo))
+        }
+        let baseURL = URL(string: config.secureBaseImageURLString)!
+        let url = baseURL.appendingPathComponent(size).appendingPathComponent(filePath)
+        
+        print(url)
+        
+        let request = URLRequest(url: url)
+        
+        let task = session.dataTask(with: request, completionHandler: {data, response, downloadError in
+            
+            if let error = downloadError {
+                sendError("download error")
+                completionHandler(nil, error as NSError?)
+            } else {
+                completionHandler(data, nil)
+            }
+        }) 
+        
+        task.resume()
+        
+        return task
+    }
+    
     // given raw JSON, return a usable Foundation object
-    private func convertDataWithCompletionHandler(data: NSData, completionHandlerForConvertData: (result: AnyObject!, error: NSError?) -> Void) {
+    fileprivate func convertDataWithCompletionHandler(_ data: Data, completionHandlerForConvertData: (_ result: AnyObject?, _ error: NSError?) -> Void) {
         
         var parsedResult: AnyObject!
         do {
-            parsedResult = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
+            
+            parsedResult = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
         } catch {
             let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
-            completionHandlerForConvertData(result: nil, error: NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
+            completionHandlerForConvertData(nil, NSError(domain: "convertDataWithCompletionHandler", code: 1, userInfo: userInfo))
         }
         
-        completionHandlerForConvertData(result: parsedResult, error: nil)
+        completionHandlerForConvertData(parsedResult, nil)
     }
     
     // create a URL from parameters
-    private func tmdbURLFromParameters(parameters: [String:AnyObject], withPathExtension: String? = nil) -> NSURL {
+    fileprivate func tmdbURLFromParameters(_ parameters: [String:AnyObject], withPathExtension: String? = nil) -> URL {
         
-        let components = NSURLComponents()
+        var components = URLComponents()
         components.scheme = TMDBClient.Constants.ApiScheme
         components.host = TMDBClient.Constants.ApiHost
         components.path = TMDBClient.Constants.ApiPath + (withPathExtension ?? "")
-        components.queryItems = [NSURLQueryItem]()
+        components.queryItems = [URLQueryItem]()
         
         for (key, value) in parameters {
-            let queryItem = NSURLQueryItem(name: key, value: "\(value)")
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
         
-        return components.URL!
+        return components.url!
     }
     
     // MARK: Shared Instance
@@ -172,13 +206,13 @@ class TMDBClient: NSObject {
     
     // MARK: - Shared Date Formatter
     
-    class var sharedDateFormatter: NSDateFormatter  {
+    class var sharedDateFormatter: DateFormatter  {
         
         struct Singleton {
             static let dateFormatter = Singleton.generateDateFormatter()
             
-            static func generateDateFormatter() -> NSDateFormatter {
-                let formatter = NSDateFormatter()
+            static func generateDateFormatter() -> DateFormatter {
+                let formatter = DateFormatter()
                 formatter.dateFormat = "yyyy-mm-dd"
                 
                 return formatter

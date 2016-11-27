@@ -12,11 +12,11 @@ import UIKit
 
 class ImageCache {
     
-    private var inMemoryCache = NSCache()
+    fileprivate var inMemoryCache = NSCache<AnyObject, AnyObject>()
     
     // MARK: - Retreiving images
     
-    func imageWithIdentifier(identifier: String?) -> UIImage? {
+    func imageWithIdentifier(_ identifier: String?) -> UIImage? {
         
         // If the identifier is nil, or empty, return nil
         if identifier == nil || identifier! == "" {
@@ -26,12 +26,12 @@ class ImageCache {
         let path = pathForIdentifier(identifier!)
         
         // First try the memory cache
-        if let image = inMemoryCache.objectForKey(path) as? UIImage {
+        if let image = inMemoryCache.object(forKey: path as AnyObject) as? UIImage {
             return image
         }
         
         // Next Try the hard drive
-        if let data = NSData(contentsOfFile: path) {
+        if let data = try? Data(contentsOf: URL(fileURLWithPath: path)) {
             return UIImage(data: data)
         }
         
@@ -40,18 +40,18 @@ class ImageCache {
     
     // MARK: - Saving images
     
-    func storeImage(image: UIImage?, withIdentifier identifier: String) {
+    func storeImage(_ image: UIImage?, withIdentifier identifier: String) {
         let path = pathForIdentifier(identifier)
         let data = UIImageJPEGRepresentation(image!, 1.0)!
-        data.writeToFile(path, atomically: true)
+        try? data.write(to: URL(fileURLWithPath: path), options: [.atomic])
     }
     
     // MARK: deleting images
-    func deleteImages(identifier: String){
+    func deleteImages(_ identifier: String){
         let path = pathForIdentifier(identifier)
-        if NSFileManager.defaultManager().fileExistsAtPath(path){
+        if FileManager.default.fileExists(atPath: path){
             do {
-                try NSFileManager.defaultManager().removeItemAtPath(path)
+                try FileManager.default.removeItem(atPath: path)
             } catch {}
             print("deleted \(path)")
         }
@@ -59,11 +59,11 @@ class ImageCache {
     
     // MARK: - Helper
     
-    func pathForIdentifier(identifier: String) -> String {
+    func pathForIdentifier(_ identifier: String) -> String {
         let id = identifier
-        let documentsDirectoryURL: NSURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-        let fullURL = documentsDirectoryURL.URLByAppendingPathComponent(id)
+        let documentsDirectoryURL: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fullURL = documentsDirectoryURL.appendingPathComponent(id)
         
-        return fullURL.path!
+        return fullURL.path
     }
 }

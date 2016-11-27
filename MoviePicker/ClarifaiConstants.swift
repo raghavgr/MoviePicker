@@ -16,6 +16,6 @@ extension ClarifaiClient {
         static let clientSecret: String = "com.MoviePicker.clientSecret"
         static let AccessToken: String = "com.MoviePicker.AccessToken"
         static let AccessTokenExpiryTime: String = "com.MoviePicker.AccessTokenExpiryTime"
-        static let MinimumTokenTime: NSTimeInterval = 60
+        static let MinimumTokenTime: TimeInterval = 60
     }
 }

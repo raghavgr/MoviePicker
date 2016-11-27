@@ -10,12 +10,13 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
+
 class ClarifaiClient {
     
     var appID: String
     var appSecret: String
     var accessToken: String?
-    var accessTokenExpiration: NSDate?
+    var accessTokenExpiration: Date?
     
     init(appClarifaiID: String, appClarifaiSecret: String) {
         self.appID = appClarifaiID
@@ -23,37 +24,37 @@ class ClarifaiClient {
         self.getAccessToken()
     }
     
-    func checkAccessToken(completionHandlerForAccessToken: (errorString: NSError?) -> ()) {
-        if self.accessToken != nil && self.accessTokenExpiration != nil && self.accessTokenExpiration?.timeIntervalSinceNow > Config.MinimumTokenTime {
-            completionHandlerForAccessToken(errorString: nil)
+    func checkAccessToken(_ completionHandlerForAccessToken: @escaping (_ errorString: NSError?) -> ()) {
+        if self.accessToken != nil && self.accessTokenExpiration != nil && (self.accessTokenExpiration?.timeIntervalSinceNow)! > Config.MinimumTokenTime {
+            completionHandlerForAccessToken(nil)
         } else {
             let urlParams: Dictionary<String, AnyObject> =
-                [ "grant_type": "client_credentials",
-                  "client_id": self.appID,
-                  "client_secret": self.appSecret
+                [ "grant_type": "client_credentials" as AnyObject,
+                  "client_id": self.appID as AnyObject,
+                  "client_secret": self.appSecret as AnyObject
                 ]
-            Alamofire.request(.POST, Config.APIBaseURL.stringByAppendingString("/token"), parameters: urlParams)
+            Alamofire.request(Config.APIBaseURL.appending("/token"), method: .post, parameters: urlParams)
                 .validate()
                 .responseJSON() {
                     response in
                     switch response.result {
-                    case .Success(let result):
+                    case .success(let result):
                         print("Validation Successful. Got access token")
                         let tokenResult = responseForToken(jsonResponse: result as! NSDictionary)
                         self.saveCurrentToken(tokenResult)
                         
-                    case .Failure(let errorString):
-                        completionHandlerForAccessToken(errorString: errorString)
+                    case .failure(let errorString):
+                        completionHandlerForAccessToken(errorString as NSError?)
                     }
                     
             }
         }
     }
     
-    func saveCurrentToken(result: responseForToken) {
-        if let token = result.token, expiryTime = result.lastingTime {
-            let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-            let expiration: NSDate = NSDate(timeIntervalSinceNow: expiryTime)
+    func saveCurrentToken(_ result: responseForToken) {
+        if let token = result.token, let expiryTime = result.lastingTime {
+            let defaults: UserDefaults = UserDefaults.standard
+            let expiration: Date = Date(timeIntervalSinceNow: expiryTime)
             print("in save current token")
             defaults.setValue(self.appID, forKey: Config.clientID)
             defaults.setValue(result.token, forKey: Config.AccessToken)
@@ -67,10 +68,10 @@ class ClarifaiClient {
     }
     
     func cancelAccessToken() {
-        let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        defaults.removeObjectForKey(Config.clientID)
-        defaults.removeObjectForKey(Config.AccessToken)
-        defaults.removeObjectForKey(Config.AccessTokenExpiryTime)
+        let defaults: UserDefaults = UserDefaults.standard
+        defaults.removeObject(forKey: Config.clientID)
+        defaults.removeObject(forKey: Config.AccessToken)
+        defaults.removeObject(forKey: Config.AccessTokenExpiryTime)
         defaults.synchronize()
         
         self.accessToken = nil
@@ -78,25 +79,25 @@ class ClarifaiClient {
     }
     
     func getAccessToken() {
-        let defaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        
-        if self.appID != defaults.stringForKey(Config.clientID){
+        let defaults: UserDefaults = UserDefaults.standard
+        print("in get access token")
+        if self.appID != defaults.string(forKey: Config.clientID){
             
             self.checkAccessToken() {
                 (error) in
                 if error != nil {
-                    print(error)
+                    print(error!)
                 }
             }
         } else {
-            self.accessToken = defaults.stringForKey(Config.AccessToken)!
-            print(self.accessToken)
-            self.accessTokenExpiration = defaults.objectForKey(Config.AccessTokenExpiryTime)! as? NSDate
+            self.accessToken = defaults.string(forKey: Config.AccessToken)!
+            //print(self.accessToken!)
+            self.accessTokenExpiration = defaults.object(forKey: Config.AccessTokenExpiryTime)! as? Date
         }
     }
     class responseForToken: NSObject {
         var token: String?
-        var lastingTime: NSTimeInterval?
+        var lastingTime: TimeInterval?
         
         init(jsonResponse: NSDictionary) {
             self.token = jsonResponse["access_token"] as? String
@@ -120,44 +121,49 @@ class ClarifaiClient {
     ///   - int: An image `UIImage` parameter.
     /// - throws: throws an NSError
     /// - returns: a Clarifai Response.
-    func recognizeImage(data: UIImage, completionHandlerForRecognizeImage: (recognizeResponse: clarifaiResponse?, ErrorType: NSError?) -> ()) {
+    func recognizeImage(_ data: UIImage, completionHandlerForRecognizeImage: @escaping (_ recognizeResponse: clarifaiResponse?, _ ErrorType: NSError?) -> ()) {
         self.checkAccessToken() {
             (error) in
             // check if token is valid
             if error != nil {
-                return completionHandlerForRecognizeImage(recognizeResponse: nil, ErrorType: error)
+                return completionHandlerForRecognizeImage(nil, error)
             }
             print("in recognizeImage")
             let endpointForTag = "/tag"
-            Alamofire.upload(.POST, Config.APIBaseURL.stringByAppendingString(endpointForTag),
-                headers: ["Authorization": "Bearer \(self.accessToken!)"],
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer " + self.accessToken!,
+                "Content-Type": "application/json"
+            ]
+            let tagURL = try! URLRequest(url: Config.APIBaseURL + endpointForTag, method: .post, headers: headers)
+            Alamofire.upload(
                 multipartFormData: {
                     multiPartFormData in
-                    let size = CGSizeMake(320, 320 * data.size.height/data.size.width)
+                    let size = CGSize(width: 320, height: 320 * data.size.height/data.size.width)
                     UIGraphicsBeginImageContext(size)
-                    data.drawInRect(CGRectMake(0, 0, size.width, size.height))
+                    data.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
                     let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
                     UIGraphicsEndImageContext()
-                    
-                    multiPartFormData.appendBodyPart(data: UIImageJPEGRepresentation(resizedImage, 0.9)!, name: "encoded_image", fileName: "image.jpg", mimeType: "image/jpeg")
+                    multiPartFormData.append(UIImageJPEGRepresentation(resizedImage!, 0.9)!, withName: "encoded_image", fileName: "image.jpg", mimeType: "image/jpeg")
                     print("in alamofire upload")
                 },
+                with: tagURL,
                 encodingCompletion: {
                     encodingResult in
                     switch encodingResult {
-                    case .Success(let upload, _, _):
-                        upload.validate().responseJSON {
+                    case .success(let upload, _, _):
+                        upload.responseJSON {
                             response in
                             switch response.result {
-                            case .Success(let result):
+                            case .success(let result):
                                 let resultJSON = JSON(result)
+                                print("Image succesfully read")
                                 let finalResult = clarifaiResponse(dict: resultJSON)
-                                completionHandlerForRecognizeImage(recognizeResponse: finalResult, ErrorType: nil)
-                            case .Failure(let error):
-                                completionHandlerForRecognizeImage(recognizeResponse: nil, ErrorType: error)
+                                completionHandlerForRecognizeImage(finalResult, nil)
+                            case .failure(let error):
+                                completionHandlerForRecognizeImage(nil, error as NSError?)
                             }
                         }
-                    case .Failure(let errorWhileEncoding):
+                    case .failure(let errorWhileEncoding):
                         print(errorWhileEncoding)
                     }
                 }
@@ -186,7 +192,10 @@ class ClarifaiClient {
         init(dict: JSON) {
             self.statusCode = dict["status_code"].stringValue
             self.statusMsg = dict["status_msg"].stringValue
+            print(statusMsg)
+            print(statusCode)
             let allResults = dict["results"].arrayValue
+            print("all results: \(allResults.count)")
             allTags = []
             for aResult in allResults {
                 // tested all of this in playground
@@ -194,10 +203,10 @@ class ClarifaiClient {
                 let probabilities = aResult["result"]["tag"]["probs"].arrayObject
                 let concepts = aResult["result"]["tag"]["concept_ids"].arrayObject
                 print("in clarifaiResponse loop")
-                for (i, classLabel) in classes!.enumerate() {
+                for (i, classLabel) in classes!.enumerated() {
                     let probability = probabilities![i] as! Float
                     let concept = concepts![i]
-                    
+                    print(classLabel)
                     let newTag = tagResponse(label: classLabel as! String, prob: probability, conId: concept as! String)
                     allTags?.append(newTag)
                 }

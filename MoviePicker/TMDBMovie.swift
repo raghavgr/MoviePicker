@@ -27,7 +27,7 @@ struct TMDBMovie {
 
     }
     
-    static func moviesFromResults(results: [[String:AnyObject]]) -> [TMDBMovie] {
+    static func moviesFromResults(_ results: [[String:AnyObject]]) -> [TMDBMovie] {
         
         var movies = [TMDBMovie]()
         

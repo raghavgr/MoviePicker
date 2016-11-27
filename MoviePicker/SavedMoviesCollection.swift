@@ -15,14 +15,14 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
     @IBOutlet weak var photosCollection: UICollectionView!
     
     var allPhotos = [Photo]()
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var screenSize: CGRect!
     var screenWidth: CGFloat!
     var screenHeight: CGFloat!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        screenSize = UIScreen.mainScreen().bounds
+        screenSize = UIScreen.main.bounds
         screenWidth = screenSize.width
         screenHeight = screenSize.height
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -38,7 +38,7 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
         self.photosCollection.emptyDataSetSource = self
         photosCollection.emptyDataSetDelegate = self
         let stack = appDelegate.stack
-        let fr = NSFetchRequest(entityName: "Photo")
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
         fr.sortDescriptors = []
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr,
@@ -47,7 +47,7 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
         
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         executeSearch()
         allPhotos = getPhotos()
@@ -57,7 +57,7 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
         print("pics will appear: \(allPhotos.count)")
 
     }
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         executeSearch()
         //allPhotos = getPhotos()
@@ -77,11 +77,11 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
     
     func getPhotos() -> [Photo] {
         print("get Photos called")
-        let request = NSFetchRequest(entityName: "Photo")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
         
         do {
             print("inside do")
-            return try self.appDelegate.stack.context.executeFetchRequest(request) as! [Photo]
+            return try self.appDelegate.stack.context.fetch(request) as! [Photo]
         } catch {
             print("Get Photos")
             return [Photo]()
@@ -90,18 +90,20 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
 }
 extension SavedMoviesCollection {
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return allPhotos.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        // let pic = allPhotos[indexPath.row]
         //let image = UIImage(data: pic.image!)
         print("inside cellforeItem collection")
-        let pic = allPhotos[indexPath.row]
-        let anImage = pic.image
-        let collectionCellImage = UIImage(data: anImage!)
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as! ImageCollectionCell
+        let pic = allPhotos[(indexPath as NSIndexPath).row]
+        print(allPhotos.count)
+        let anImage = pic.image!
+        print(anImage.description)
+        let collectionCellImage = UIImage(data: anImage as Data)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ImageCollectionCell
         cell.imageView.image = collectionCellImage
         
        
@@ -110,9 +112,9 @@ extension SavedMoviesCollection {
         return cell
     }
     
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let destinationVC = storyboard?.instantiateViewControllerWithIdentifier("ShowFilmsVC") as! ShowFilms
-        let currentPic = allPhotos[indexPath.row]
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let destinationVC = storyboard?.instantiateViewController(withIdentifier: "ShowFilmsVC") as! ShowFilms
+        let currentPic = allPhotos[(indexPath as NSIndexPath).row]
         destinationVC.image = currentPic
         navigationController?.pushViewController(destinationVC, animated: true)
     }
@@ -121,19 +123,19 @@ extension SavedMoviesCollection {
 
 extension SavedMoviesCollection {
     // MARK: DZNEmptyDataSet functions
-    func titleForEmptyDataSet(scrollView: UIScrollView) -> NSAttributedString? {
+    func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         return NSAttributedString(string: "No images selected 📷")
         
     }
     
-    func descriptionForEmptyDataSet(scrollView: UIScrollView) -> NSAttributedString? {
+    func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         let text = "Add an image and select your films"
         return NSAttributedString(string: text, attributes: [
-            NSForegroundColorAttributeName: UIColor.grayColor()
+            NSForegroundColorAttributeName: UIColor.gray
             ])
     }
     
-    func imageForEmptyDataSet(scrollView: UIScrollView) -> UIImage? {
+    func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
         return UIImage(named: "Camera")
     }
 

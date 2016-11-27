@@ -26,12 +26,12 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
     
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
 
-    var si: SelectedPhoto = SelectedPhoto.sharedInstance
+    //var si: SelectedPhoto = SelectedPhoto.sharedInstance
     let picker = UIImagePickerController()
     var allLabels: Set<String> = []
     // MARK: Alerts
-    let customAlert = UIAlertController(title: nil, message: "", preferredStyle: UIAlertControllerStyle.Alert)
-    let retry = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
+    let customAlert = UIAlertController(title: nil, message: "", preferredStyle: UIAlertControllerStyle.alert)
+    let retry = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
     
     // MARK: Bool values for DZNEmpty data set
     var isWordSelected: Bool = false
@@ -46,7 +46,7 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
     var isSavedPhoto: Bool = false
     
     // MARK: Core data 
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +55,7 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
         self.customAlert.addAction(retry)
  
         picker.delegate = self
-        reArrangeUIButton.enabled = false
+        reArrangeUIButton.isEnabled = false
         classesTable.delegate = self
         classesTable.dataSource = self
         classesTable.emptyDataSetDelegate = self
@@ -74,7 +74,21 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
         isKeywordsLoaded = false
         self.navigationItem.title = "Movie Picker"
         
-        loadingIndicator.hidden = true
+        loadingIndicator.isHidden = true
+        
+        if isSavedPhoto {
+            cleanUpUI(true)
+            //resultImage.image = photo.image as! UIImage
+            let finalImage = UIImage(data: photo.image! as Data)
+            resultImage.image = finalImage
+            recognizeImage(finalImage)
+            reArrangeUIButton.isEnabled = true
+        }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("why no loading indicator")
+        loadingIndicator.isHidden = true
     }
     
     func saveCurrentState() {
@@ -85,81 +99,92 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
         }
     }
     
-    @IBAction func refreshUI(sender: AnyObject) {
+    @IBAction func refreshUI(_ sender: AnyObject) {
         cleanUpUI(false)
     }
     
     /// Re-arrange UI
-    func cleanUpUI(isPickerOn: Bool) {
+    func cleanUpUI(_ isPickerOn: Bool) {
         if isPickerOn {
-            resultImage.hidden = false
-           classesTable.hidden = false
+            print("calling true cleanUPUi")
+            resultImage.isHidden = false
+           classesTable.isHidden = false
             
             //picAdded = true
-           addImageButton.enabled = false
-            addImageButton.hidden = false
+           addImageButton.isEnabled = false
+            addImageButton.isHidden = true
         } else {
             print("calling false cleanUPUi")
             resultImage.image = nil
-            resultImage.hidden = true
-            classesTable.hidden = true
-            keywordsTable.hidden = true
-            addImageButton.enabled = true
-            addImageButton.hidden = false
-            reArrangeUIButton.enabled = false
+            resultImage.isHidden = true
+            classesTable.isHidden = true
+            keywordsTable.isHidden = true
+            addImageButton.isEnabled = true
+            addImageButton.isHidden = false
+            reArrangeUIButton.isEnabled = false
             allLabels = []
             keywords = []
             isWordSelected = false
             isKeywordsLoaded = false
             navigationItem.leftBarButtonItem = nil
+            loadingIndicator.isHidden = true
+            loadingIndicator.stopAnimating()
             self.keywordsTable.reloadData()
             self.classesTable.reloadData()
         }
     }
     // MARK: Image Picker Functions
-    @IBAction func imageSelector(sender: AnyObject) {
-        reArrangeUIButton.enabled = true
+    @IBAction func imageSelector(_ sender: AnyObject) {
+        reArrangeUIButton.isEnabled = true
         // use actionsheet to select picture source
-        let actionSheet = UIAlertController(title: "New Photo", message: nil, preferredStyle: .ActionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Camera", style: .Default, handler: {
+        let actionSheet = UIAlertController(title: "New Photo", message: nil, preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: {
            action in
             self.selectFromCamera()
         }))
-        actionSheet.addAction(UIAlertAction(title: "Gallery", style: .Default, handler: {
+        actionSheet.addAction(UIAlertAction(title: "Gallery", style: .default, handler: {
             action in
             self.selectFromGallery()
         }))
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-        self.presentViewController(actionSheet, animated: true, completion: nil)
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(actionSheet, animated: true, completion: nil)
 
     }
     func selectFromCamera() {
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
-            picker.sourceType = UIImagePickerControllerSourceType.Camera
-            self.presentViewController(picker, animated: true, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
+            picker.sourceType = UIImagePickerControllerSourceType.camera
+            self.present(picker, animated: true, completion: nil)
  
         } else {
             customAlert.message = "Camera source not available"
-            presentViewController(customAlert, animated: true, completion: nil)
+            present(customAlert, animated: true, completion: nil)
         }
     }
     func selectFromGallery() {
-        picker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        self.presentViewController(picker, animated: true, completion: nil)
+        picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        self.present(picker, animated: true, completion: nil)
     }
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        resultImage.image = image
-        resultImage.contentMode = UIViewContentMode.ScaleAspectFill
-        resultImage.clipsToBounds = true
-        SelectedPhoto.selectedImage = image!
-        photo = Photo(pic: image!, context: self.appDelegate.stack.context)
-        self.saveCurrentState()
-        cleanUpUI(true)
-        recognizeImage(image)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            resultImage.image = image
+            resultImage.contentMode = UIViewContentMode.scaleAspectFill
+            resultImage.clipsToBounds = true
+            SelectedPhoto.selectedImage = image
+            photo = Photo(pic: image, context: self.appDelegate.stack.context)
+            self.saveCurrentState()
+            loadingIndicator.isHidden = false
+            loadingIndicator.startAnimating()
+            cleanUpUI(true)
+            
+            recognizeImage(image)
+            
+        } else {
+            print("Image picker has an error")
+        }
         
-        dismissViewControllerAnimated(true, completion: nil)
+
+        dismiss(animated: true, completion: nil)
     }
     
 }
@@ -167,14 +192,15 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
 // MARK: Clarifai API Interaction
 
 extension ShowImageAndTags {
-    func recognizeImage(image: UIImage!) {
+    func recognizeImage(_ image: UIImage!) {
         clarifai?.recognizeImage(image) {
              (response, error) in
             if error != nil {
                 print("Error: \(error)\n")
                 self.customAlert.message = "The Internet connection appears to be offline."
                 performUIUpdatesOnMain {
-                    self.presentViewController(self.customAlert, animated: true, completion: nil)
+                    self.loadingIndicator.stopAnimating()
+                    self.present(self.customAlert, animated: true, completion: nil)
                 }
             } else {
                 
@@ -183,7 +209,8 @@ extension ShowImageAndTags {
                     //print(tag.classLabel)
                     performUIUpdatesOnMain {
                         //print("in uiupdate")
-                        self.classesTable.hidden = false
+                        self.loadingIndicator.stopAnimating()
+                        self.classesTable.isHidden = false
                         self.classesTable.reloadData()
                     }
                 }
@@ -195,7 +222,7 @@ extension ShowImageAndTags {
 // MARK: Tableview methods
 extension ShowImageAndTags {
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         //print(allLabels.count)
         var count: Int?
         if tableView == self.classesTable {
@@ -208,51 +235,53 @@ extension ShowImageAndTags {
         return count!
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //tableView.reloadData()
         var cell:UITableViewCell?
         if tableView == self.classesTable {
             let CellReuseId = "clarifaiCell"
-            cell = tableView.dequeueReusableCellWithIdentifier(CellReuseId) as UITableViewCell!
+            cell = tableView.dequeueReusableCell(withIdentifier: CellReuseId) as UITableViewCell!
             let arrLabels = Array(allLabels)
-            cell!.textLabel?.text = arrLabels[indexPath.row]
+            cell!.textLabel?.text = arrLabels[(indexPath as NSIndexPath).row]
+            print(arrLabels[(indexPath as NSIndexPath).row])
+            isWordSelected = true
             //return cell
         }
         if tableView == self.keywordsTable {
             let reuseID = "keywordCell"
             //print(reuseID)
-            cell = tableView.dequeueReusableCellWithIdentifier(reuseID) as UITableViewCell!
-            cell!.textLabel?.text = keywords[indexPath.row].queryName
+            cell = tableView.dequeueReusableCell(withIdentifier: reuseID) as UITableViewCell!
+            cell!.textLabel?.text = keywords[(indexPath as NSIndexPath).row].queryName
             //return cell
         }
         return cell!
         
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        print(indexPath.row)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print((indexPath as NSIndexPath).row)
         if tableView == self.classesTable {
             //let destinationVC = storyboard?.instantiateViewControllerWithIdentifier("SimilarKeywordVC") as! KeywordSimilarTable
             let arrLabels = Array(allLabels)
             //destinationVC.clarifaiString = arrLabels[indexPath.row]
             //navigationController?.pushViewController(destinationVC, animated: true)
-            clarifaiString = arrLabels[indexPath.row]
+            clarifaiString = arrLabels[(indexPath as NSIndexPath).row]
             isWordSelected = true
             print("isWordSelected value: \(isWordSelected)")
-            let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Cancel, target: self, action: #selector(ShowImageAndTags.backButton))
+            let backButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.cancel, target: self, action: #selector(ShowImageAndTags.backButton))
             navigationItem.leftBarButtonItem = backButton
             navigationItem.title = "Related Keywords"
             performUIUpdatesOnMain{
                 
-                self.classesTable.hidden = true
+                self.classesTable.isHidden = true
                 //self.classesTable.userInteractionEnabled = false
-                self.keywordsTable.hidden = false
-                self.resultImage.hidden = true
-                self.addImageButton.hidden = true
-                
+                self.keywordsTable.isHidden = false
+                self.resultImage.isHidden = true
+                self.addImageButton.isHidden = true
+                self.loadingIndicator.startAnimating()
 
             }
-            TMDBClient.sharedInstance().getMoviesForKeyworfString(clarifaiString) {
+            _ = TMDBClient.sharedInstance().getMoviesForKeyworfString(clarifaiString) {
                 (results, error) in
                 if let results = results {
                     self.keywords = results
@@ -260,18 +289,36 @@ extension ShowImageAndTags {
                         self.isKeywordsLoaded = true
                         print("value of keywordsLoadedBool: \(self.isKeywordsLoaded)")
                         print("total keywords: \(self.keywords.count)")
-                       
+                        if self.keywords.count == 0 {
+                            print("No Movies related")
+                            self.customAlert.message = "Error occured while getting related keywords"
+                            performUIUpdatesOnMain {
+                                self.loadingIndicator.stopAnimating()
+                                
+                                self.present(self.customAlert, animated: true, completion: nil)
+                            }
+
+                        }
+                        self.loadingIndicator.stopAnimating()
                         self.keywordsTable.reloadData()
                     }
                 } else {
-                    print(error)
+                    print("No Movies related")
+                    self.customAlert.message = "Error occured while getting related keywords"
+                    performUIUpdatesOnMain {
+                        self.loadingIndicator.stopAnimating()
+                        
+                        self.present(self.customAlert, animated: true, completion: nil)
+                    }
+                    self.present(self.customAlert, animated: true, completion: nil)
+                    print(error!)
                 }
             }
         }
         
         if tableView == self.keywordsTable {
-            let destinationVC = storyboard?.instantiateViewControllerWithIdentifier("RelatedMoviesVC") as! RelatedMovies
-            destinationVC.keywordResponse = keywords[indexPath.row]
+            let destinationVC = storyboard?.instantiateViewController(withIdentifier: "RelatedMoviesVC") as! RelatedMoviesViewController
+            destinationVC.keywordResponse = keywords[(indexPath as NSIndexPath).row]
             destinationVC.image = photo
             destinationVC.navigationItem.title = "Related Movies"
             navigationController?.pushViewController(destinationVC, animated: true)
@@ -283,16 +330,16 @@ extension ShowImageAndTags {
     func backButton() {
         isWordSelected = false
         self.isKeywordsLoaded = false
-        self.classesTable.hidden = false
-        self.keywordsTable.hidden = true
-        self.resultImage.hidden = false
+        self.classesTable.isHidden = false
+        self.keywordsTable.isHidden = true
+        self.resultImage.isHidden = false
         navigationItem.leftBarButtonItem = nil
         navigationItem.title = "Movie Picker"
     }
     
     
     
-    func titleForEmptyDataSet(scrollView: UIScrollView) -> NSAttributedString? {
+    func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         if isWordSelected {
            print("is word selected?")
             if isKeywordsLoaded {
@@ -312,7 +359,7 @@ extension ShowImageAndTags {
         }
     }
 
-    func descriptionForEmptyDataSet(scrollView: UIScrollView) -> NSAttributedString? {
+    func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
         //if isPicAdded  {
 
        /* } else {
@@ -328,7 +375,7 @@ extension ShowImageAndTags {
                     let text = "The Movie DB could not get more related keywords"
                     //print("Keyword: inside dzn method for description")
                     return NSAttributedString(string: text, attributes: [
-                        NSForegroundColorAttributeName: UIColor.grayColor()
+                        NSForegroundColorAttributeName: UIColor.gray
                         ])
                 } else {
                     return nil
@@ -337,19 +384,19 @@ extension ShowImageAndTags {
                 let text = "The Movie DB will give more related keywords"
                 print("Keyword: inside dzn method for description")
                 return NSAttributedString(string: text, attributes: [
-                    NSForegroundColorAttributeName: UIColor.grayColor()
+                    NSForegroundColorAttributeName: UIColor.gray
                     ])
             
         } else {
             let text = "Please wait as the Clarifai API recognizes the image"
             print("inside dzn method for description")
             return NSAttributedString(string: text, attributes: [
-                NSForegroundColorAttributeName: UIColor.grayColor()
+                NSForegroundColorAttributeName: UIColor.gray
                 ])
         }
     }
     
-    func imageForEmptyDataSet(scrollView: UIScrollView) -> UIImage? {
+    func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
         if isWordSelected {
             return UIImage(named: "Keyword")
         } else {

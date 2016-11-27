@@ -14,7 +14,7 @@ import CoreData
 
 extension Photo {
 
-    @NSManaged var image: NSData?
+    @NSManaged var image: Data?
     @NSManaged var movies: NSSet?
 
 }
