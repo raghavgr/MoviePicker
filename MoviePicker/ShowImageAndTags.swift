@@ -36,7 +36,7 @@ class ShowImageAndTags: CoreViewController, UIImagePickerControllerDelegate, UIN
     // MARK: Bool values for DZNEmpty data set
     var isWordSelected: Bool = false
     var isKeywordsLoaded: Bool = false
-    
+    var hasNoError: Bool = true
     // Variables for Keywords table loading
     var keywords: [searchKeywordResponse] = [searchKeywordResponse]()
     var clarifaiString: String = ""
@@ -48,6 +48,8 @@ class ShowImageAndTags: CoreViewController, UIImagePickerControllerDelegate, UIN
     // MARK: Core data 
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // initialising Clarifai Client
@@ -105,6 +107,9 @@ class ShowImageAndTags: CoreViewController, UIImagePickerControllerDelegate, UIN
         }
     }
     
+
+
+    
     @IBAction func refreshUI(_ sender: AnyObject) {
         cleanUpUI(false)
     }
@@ -133,8 +138,7 @@ class ShowImageAndTags: CoreViewController, UIImagePickerControllerDelegate, UIN
             isWordSelected = false
             isKeywordsLoaded = false
             navigationItem.leftBarButtonItem = nil
-            loadingIndicator.isHidden = true
-            loadingIndicator.stopAnimating()
+            loadingIndicator.hidesWhenStopped = true
             self.keywordsTable.reloadData()
             self.classesTable.reloadData()
         }
@@ -179,8 +183,10 @@ class ShowImageAndTags: CoreViewController, UIImagePickerControllerDelegate, UIN
             SelectedPhoto.selectedImage = image
             photo = Photo(pic: image, context: self.appDelegate.stack.context)
             self.saveCurrentState()
-            loadingIndicator.isHidden = false
-            loadingIndicator.startAnimating()
+
+            //LoadingIndicator.sharedInstance().showActivityIndicatory(uiView: self.view)
+            loadingIndicator.isHidden  = false
+            self.loadingIndicator.startAnimating()
             cleanUpUI(true)
             
             recognizeImage(image)
@@ -202,11 +208,14 @@ extension ShowImageAndTags {
         clarifai?.recognizeImage(image) {
              (response, error) in
             if error != nil {
+                self.hasNoError = false
                 print("Error: \(error)\n")
                 self.customAlert.message = "The Internet connection appears to be offline."
                 performUIUpdatesOnMain {
+                   // LoadingIndicator.sharedInstance().hideActivityIndicator(uiView: self.view)
                     self.loadingIndicator.stopAnimating()
                     self.present(self.customAlert, animated: true, completion: nil)
+                    self.classesTable.reloadData()
                 }
             } else {
                 
@@ -215,7 +224,8 @@ extension ShowImageAndTags {
                     //print(tag.classLabel)
                     performUIUpdatesOnMain {
                         //print("in uiupdate")
-                        self.loadingIndicator.stopAnimating()
+                       self.loadingIndicator.stopAnimating()
+                        //LoadingIndicator.sharedInstance().hideActivityIndicator(uiView: self.view)
                         self.classesTable.isHidden = false
                         self.classesTable.reloadData()
                     }
@@ -285,7 +295,9 @@ extension ShowImageAndTags {
                 self.resultImage.isHidden = true
                 self.addImageButton.isHidden = true
                 self.loadingIndicator.startAnimating()
-
+                
+                
+               // LoadingIndicator.sharedInstance().showActivityIndicatory(uiView: self.view)
             }
             _ = TMDBClient.sharedInstance().getMoviesForKeyworfString(clarifaiString) {
                 (results, error) in
@@ -300,7 +312,7 @@ extension ShowImageAndTags {
                             self.customAlert.message = "Error occured while getting related keywords"
                             performUIUpdatesOnMain {
                                 self.loadingIndicator.stopAnimating()
-                                
+                                //LoadingIndicator.sharedInstance().hideActivityIndicator(uiView: self.view)
                                 self.present(self.customAlert, animated: true, completion: nil)
                             }
 
@@ -309,7 +321,11 @@ extension ShowImageAndTags {
                         self.keywordsTable.reloadData()
                     }
                 } else {
-                    print("No Movies related")
+                    self.hasNoError = false
+                    self.loadingIndicator.stopAnimating()
+
+                    //LoadingIndicator.sharedInstance().hideActivityIndicator(uiView: self.view)
+                    print("No keywords related")
 
                 }
             }
@@ -342,56 +358,60 @@ extension ShowImageAndTags {
     
     
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        if isWordSelected {
-           print("is word selected?")
-            if isKeywordsLoaded {
-                print("is keywords laoded?")
-                if keywords.count == 0 {
-                    print("no keywords loaded")
-                    return NSAttributedString(string: "No keywords related to '\(clarifaiString)'🙊")
-                } else {
-                    return nil
+        if hasNoError {
+            if isWordSelected {
+               print("is word selected?")
+                if isKeywordsLoaded {
+                    print("is keywords laoded?")
+                    if keywords.count == 0 {
+                        print("no keywords loaded")
+                        return NSAttributedString(string: "No keywords related to '\(clarifaiString)'🙊")
+                    } else {
+                        return nil
+                    }
                 }
+                return NSAttributedString(string: "Getting related keywords...")
+                
+            } else {
+                print("inside recognizing")
+                return NSAttributedString(string: "Recognizing...")
             }
-            return NSAttributedString(string: "Getting related keywords...")
-            
         } else {
-            print("inside recognizing")
-            return NSAttributedString(string: "Recognizing...")
+            return NSAttributedString(string: "Error occured 😱")
+
         }
     }
 
     func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        //if isPicAdded  {
-
-       /* } else {
-            let text = "Add an image and Clarifai API will speak a 1000 words about that image"
-            print("inside dzn method after img added")
-            return NSAttributedString(string: text, attributes: [
-                NSForegroundColorAttributeName: UIColor.grayColor()
-                ])
-        }*/
-        if isWordSelected {
-            if isKeywordsLoaded {
-                if keywords.count == 0 {
-                    let text = "The Movie DB could not get more related keywords"
-                    //print("Keyword: inside dzn method for description")
+        if hasNoError {
+            if isWordSelected {
+                if isKeywordsLoaded {
+                    if keywords.count == 0 {
+                        let text = "The Movie DB could not get more related keywords"
+                        //print("Keyword: inside dzn method for description")
+                        return NSAttributedString(string: text, attributes: [
+                            NSForegroundColorAttributeName: UIColor.gray
+                            ])
+                    } else {
+                        return nil
+                    }
+                }
+                    let text = "The Movie DB will give more related keywords"
+                    print("Keyword: inside dzn method for description")
                     return NSAttributedString(string: text, attributes: [
                         NSForegroundColorAttributeName: UIColor.gray
                         ])
-                } else {
-                    return nil
-                }
-            }
-                let text = "The Movie DB will give more related keywords"
-                print("Keyword: inside dzn method for description")
+                
+            } else {
+                let text = "Please wait as the Clarifai API recognizes the image"
+                print("inside dzn method for description")
                 return NSAttributedString(string: text, attributes: [
                     NSForegroundColorAttributeName: UIColor.gray
                     ])
-            
+            }
         } else {
-            let text = "Please wait as the Clarifai API recognizes the image"
-            print("inside dzn method for description")
+            let text = "Couldn't retrieve relevant tags/keywords"
+            print("got error")
             return NSAttributedString(string: text, attributes: [
                 NSForegroundColorAttributeName: UIColor.gray
                 ])
