@@ -22,6 +22,6 @@ class MovieDetailViewController: UIViewController {
         self.posterImage.image = film.posterImage
         self.movieTitle.text = film.title
         self.reasonToWatch.text = film.whyWatch
-        self.rating.text = "\(film.rating)"
+        self.rating.text = "\(film.rating!)"
     }
 }

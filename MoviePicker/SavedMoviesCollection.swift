@@ -1,4 +1,4 @@
-//
+
 //  SavedMoviesCollection.swift
 //  MoviePicker
 //
@@ -43,8 +43,7 @@ class SavedMoviesCollection: CoreViewController, UICollectionViewDataSource, UIC
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr,
                                                               managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
-        executeSearch()
-        
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -97,13 +96,18 @@ extension SavedMoviesCollection {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        // let pic = allPhotos[indexPath.row]
         //let image = UIImage(data: pic.image!)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ImageCollectionCell
         print("inside cellforeItem collection")
         let pic = allPhotos[(indexPath as NSIndexPath).row]
         print(allPhotos.count)
-        let anImage = pic.image!
-        print(anImage.description)
+        //let anImage: Data?
+       guard let anImage = pic.image  else {
+            print("Error, couldn't find pics")
+            return cell
+        }
+        //let anImage = pic.image!
         let collectionCellImage = UIImage(data: anImage as Data)
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ImageCollectionCell
+        
         cell.imageView.image = collectionCellImage
         
        

@@ -216,10 +216,10 @@
 			isa = PBXGroup;
 			children = (
 				0EC8A0721D4FA2B700586492 /* Clients */,
-				0EC8A0691D4F953D00586492 /* Photo.swift */,
-				0EB5D5991D6DF7F200FCB55F /* Movie+CoreDataProperties.swift */,
 				0EB5D59A1D6DF7F200FCB55F /* Photo+CoreDataProperties.swift */,
+				0EC8A0691D4F953D00586492 /* Photo.swift */,
 				0EC8A06B1D4F953D00586492 /* Movie.swift */,
+				0EB5D5991D6DF7F200FCB55F /* Movie+CoreDataProperties.swift */,
 				0EC8A05D1D4F935C00586492 /* Model.xcdatamodeld */,
 				0EC8A0701D4F957D00586492 /* CoreDataStack.swift */,
 				0EC8A0751D4FB3AF00586492 /* ImageCache.swift */,

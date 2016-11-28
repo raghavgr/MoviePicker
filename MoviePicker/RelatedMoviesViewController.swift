@@ -36,6 +36,7 @@ class RelatedMoviesViewController: CoreViewController, UITableViewDataSource, UI
         print(query!)
         keywordID = keywordResponse!.keywordID
         print(keywordID!)
+        customAlert.addAction(retry)
         
         // Core data stuff
         // Setting up a fetch request
@@ -81,6 +82,7 @@ class RelatedMoviesViewController: CoreViewController, UITableViewDataSource, UI
                 }
             } else {
                 self.customAlert.message = "Couldn't get related movies"
+                
                 performUIUpdatesOnMain {
                     self.present(self.customAlert, animated: true, completion: nil)
                 }

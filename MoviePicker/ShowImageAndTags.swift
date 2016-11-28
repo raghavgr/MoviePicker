@@ -12,7 +12,7 @@ let clarifaiAppID = "OUBkZhj2F_Ftyk__XWdGl4Y82lW-XpLim7jnNgvz"
 let clarifaiSecret = "NTPWquwmNNJIJUZFaTw-t46FvLlaiDyC4zkY3MSD"
 
 var clarifai: ClarifaiClient?
-class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
+class ShowImageAndTags: CoreViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDataSource, UITableViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate{
     
     @IBOutlet weak var addImageButton: UIButton!
     
@@ -79,7 +79,13 @@ class ShowImageAndTags: UIViewController, UIImagePickerControllerDelegate, UINav
         if isSavedPhoto {
             cleanUpUI(true)
             //resultImage.image = photo.image as! UIImage
-            let finalImage = UIImage(data: photo.image! as Data)
+            guard let finalImage = UIImage(data: photo.image! as Data) else {
+                self.customAlert.message = "error while getting the image"
+                performUIUpdatesOnMain {
+                    self.present(self.customAlert, animated: true, completion: nil)
+                }
+                return
+            }
             resultImage.image = finalImage
             recognizeImage(finalImage)
             reArrangeUIButton.isEnabled = true
@@ -304,14 +310,7 @@ extension ShowImageAndTags {
                     }
                 } else {
                     print("No Movies related")
-                    self.customAlert.message = "Error occured while getting related keywords"
-                    performUIUpdatesOnMain {
-                        self.loadingIndicator.stopAnimating()
-                        
-                        self.present(self.customAlert, animated: true, completion: nil)
-                    }
-                    self.present(self.customAlert, animated: true, completion: nil)
-                    print(error!)
+
                 }
             }
         }
@@ -321,6 +320,9 @@ extension ShowImageAndTags {
             destinationVC.keywordResponse = keywords[(indexPath as NSIndexPath).row]
             destinationVC.image = photo
             destinationVC.navigationItem.title = "Related Movies"
+            performUIUpdatesOnMain {
+                destinationVC.loadingIndicator.startAnimating()
+            }
             navigationController?.pushViewController(destinationVC, animated: true)
         }
         
