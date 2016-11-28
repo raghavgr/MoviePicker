@@ -76,7 +76,9 @@ class RelatedMoviesViewController: CoreViewController, UITableViewDataSource, UI
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //self.loadingIndicator.startAnimating()
+        filmsTable.separatorStyle = .none
         disactivateScreen()
+
         _ = TMDBClient.sharedInstance().getListKeywordID(keywordID!) {
             (results, error) in
             if let results = results {

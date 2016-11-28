@@ -275,13 +275,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                                 <subviews>
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="CzQ-R1-LYO">
-                                        <rect key="frame" x="197" y="358" width="20" height="20"/>
+                                        <rect key="frame" x="197" y="300" width="20" height="20"/>
                                     </activityIndicatorView>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="CzQ-R1-LYO" firstAttribute="centerX" secondItem="bWs-fQ-2lj" secondAttribute="centerX" id="alj-8v-Ugn"/>
-                                    <constraint firstItem="CzQ-R1-LYO" firstAttribute="centerY" secondItem="bWs-fQ-2lj" secondAttribute="centerY" id="o4F-sg-6k7"/>
+                                    <constraint firstItem="CzQ-R1-LYO" firstAttribute="centerY" secondItem="bWs-fQ-2lj" secondAttribute="centerY" constant="-58" id="o4F-sg-6k7"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="subviews">

@@ -80,7 +80,6 @@
 		0E5A426B1D65E25700084E5B /* ShowFilms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowFilms.swift; sourceTree = "<group>"; };
 		0E771E291DEA4913004A6598 /* MoviePicker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MoviePicker.entitlements; sourceTree = "<group>"; };
 		0E8C23F71D4279FD00D44CDA /* ShowImageAndTags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShowImageAndTags.swift; sourceTree = "<group>"; };
-		0E9777EE1D3BC7E8000FF138 /* test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = test.playground; sourceTree = "<group>"; };
 		0E9777EF1D3BEA8D000FF138 /* MoviePicker-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MoviePicker-Bridging-Header.h"; sourceTree = "<group>"; };
 		0E9777F01D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
 		0E9777F11D3BEA8E000FF138 /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
@@ -174,7 +173,6 @@
 				0E38B1551D37A05B0005B332 /* LaunchScreen.storyboard */,
 				0E38B1531D37A05B0005B332 /* Assets.xcassets */,
 				0E38B1581D37A05B0005B332 /* Info.plist */,
-				0E9777EE1D3BC7E8000FF138 /* test.playground */,
 				0E9777EF1D3BEA8D000FF138 /* MoviePicker-Bridging-Header.h */,
 			);
 			path = MoviePicker;
