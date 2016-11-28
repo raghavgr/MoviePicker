@@ -23,5 +23,7 @@ Then select a tag to get related keywords from TMDB API.
 A table of related movies should be presented according to the selected keyword.
 Save image and view saved images tab to check out the previously saved images.
 
+## Screenshots
 
+![Loading](loading.png)
 
