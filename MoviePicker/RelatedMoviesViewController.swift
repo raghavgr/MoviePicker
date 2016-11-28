@@ -18,6 +18,7 @@ class RelatedMoviesViewController: CoreViewController, UITableViewDataSource, UI
     var keywordID: Int?
     var movies: [TMDBMovie] = [TMDBMovie]()
     var isMoviesLoaded: Bool = false
+    var hasNoError: Bool = true
     var image: Photo!
     var films = [Movie]()
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -37,7 +38,7 @@ class RelatedMoviesViewController: CoreViewController, UITableViewDataSource, UI
         keywordID = keywordResponse!.keywordID
         print(keywordID!)
         customAlert.addAction(retry)
-        
+        activityView.isHidden = true
         // Core data stuff
         // Setting up a fetch request
         //let stack = appDelegate.stack
@@ -59,30 +60,42 @@ class RelatedMoviesViewController: CoreViewController, UITableViewDataSource, UI
             self.filmsTable.contentInset = UIEdgeInsetsMake( y, 0, 0, 0)
         }
     }
+    // enable tableview and hide the activity indicator
+    func activateScreen() {
+        self.filmsTable.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: filmsTable.frame.width, height: 0)
+        self.filmsTable.tableHeaderView = self.filmsTable.tableHeaderView // necessary to really set the frame
+        loadingIndicator.stopAnimating()
+    }
     
+    // disable tableview animate the activity indicator
+    func disactivateScreen() {
+        self.filmsTable.tableHeaderView?.frame = filmsTable.frame
+        self.filmsTable.tableHeaderView = self.filmsTable.tableHeaderView // necessary to really set the frame
+        loadingIndicator.startAnimating()
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // initializing image
-        //let currImage = Photo(context: appDelegate.stack.context)
-        //image = currImage
-        //self.activityView.hidden = false
-        //self.loadingIndicator.hidden = false
-        self.loadingIndicator.startAnimating()
+        //self.loadingIndicator.startAnimating()
+        disactivateScreen()
         _ = TMDBClient.sharedInstance().getListKeywordID(keywordID!) {
             (results, error) in
             if let results = results {
                 self.movies = results
                 performUIUpdatesOnMain {
-                    self.activityView.isHidden = true
+                    //self.activityView.isHidden = true
                     //self.loadingIndicator.hidden = true
-                    self.loadingIndicator.stopAnimating()
+                    //self.loadingIndicator.stopAnimating()
+                    self.activateScreen()
                     //self.loadingIndicator.hidesWhenStopped = true
                     self.isMoviesLoaded = true
                     self.filmsTable.reloadData()
                 }
             } else {
+                print("error occured")
+                self.activateScreen()
                 self.customAlert.message = "Couldn't get related movies"
-                
+                self.hasNoError = false
+                print(self.hasNoError)
                 performUIUpdatesOnMain {
                     self.present(self.customAlert, animated: true, completion: nil)
                 }
@@ -125,7 +138,7 @@ extension RelatedMoviesViewController {
                         cell?.imageView!.image = image
                     }
                 } else {
-                    
+                    self.hasNoError = false
                     print(error!)
                 }
             })
@@ -184,6 +197,7 @@ extension RelatedMoviesViewController {
             
             if let error = error {
                 print("Poster download error: \(error.localizedDescription)")
+                self.hasNoError = false
             }
             
             if let data = data {
@@ -209,34 +223,50 @@ extension RelatedMoviesViewController {
     }
     
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        if isMoviesLoaded {
-            if movies.count == 0 {
-                return NSAttributedString(string: "No movies related to '\(query!)'🙊")
+        if hasNoError {
+            if isMoviesLoaded {
+                if movies.count == 0 {
+                    return NSAttributedString(string: "No movies related to '\(query!)'🙊")
+                } else {
+                    return nil
+                }
+                
             } else {
-                return nil
+                return NSAttributedString(string: "Getting related movies...")
             }
-            
-        } else  {
-            return NSAttributedString(string: "Getting related movies...")
+        } else {
+                return NSAttributedString(string: "Error occured ❌")
+        
         }
     }
+
     func description(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        if isMoviesLoaded {
-            if movies.count == 0 {
-                let text = "The Movie DB could not get more related movies"
-                //print("Keyword: inside dzn method for description")
+        if hasNoError {
+            if isMoviesLoaded {
+                if movies.count == 0 {
+                    let text = "The Movie DB could not get more related movies"
+                    //print("Keyword: inside dzn method for description")
+                    return NSAttributedString(string: text, attributes: [
+                        NSForegroundColorAttributeName: UIColor.gray
+                        ])
+                } else {
+                    return nil
+                }
+            } else {
+                let text = "Swipe right to save a movie. 💾"
+                print("Keyword: inside dzn method for description")
                 return NSAttributedString(string: text, attributes: [
                     NSForegroundColorAttributeName: UIColor.gray
                     ])
-            } else {
-                return nil
             }
         } else {
-            let text = "Swipe right to save a movie. 💾"
-            print("Keyword: inside dzn method for description")
-            return NSAttributedString(string: text, attributes: [
-                NSForegroundColorAttributeName: UIColor.gray
-                ])
+
+                print("hasNoError should be false")
+                let text = "There was an error in getting related movies."
+                return NSAttributedString(string: text, attributes: [
+                    NSForegroundColorAttributeName: UIColor.gray
+                    ])
+            
         }
     }
     func image(forEmptyDataSet scrollView: UIScrollView) -> UIImage? {
